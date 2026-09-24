@@ -1,0 +1,359 @@
+/* ==========================================================================
+   PORTFOLIO HERO SECTION STYLES
+   Extracted from Rasidul / RST Portfolio Architecture
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. Typography / @font-face Declarations
+   -------------------------------------------------------------------------- */
+@font-face {
+    font-family: 'SF Pro Rounded';
+    src: url('../fonts/SFNSRounded.woff2') format('woff2');
+    font-weight: 100 900;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Aeonik';
+    src: url('../fonts/Aeonik-Regular.woff2') format('woff2');
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Aeonik';
+    src: url('../fonts/Aeonik-Medium.woff2') format('woff2');
+    font-weight: 500;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Aeonik';
+    src: url('../fonts/Aeonik-RegularItalic.woff2') format('woff2');
+    font-weight: 400;
+    font-style: italic;
+    font-display: swap;
+}
+
+/* --------------------------------------------------------------------------
+   2. Core Variables & Container Dimensions
+   -------------------------------------------------------------------------- */
+:root {
+    --bg: #ffffff;
+    --fg: #0a0a0a;
+    --gutter: max(16.5vw, calc((100vw - 791px) / 2));
+    --site-w: 75.24vw;
+    --nav-gap: max(12px, 1.25vw);
+    --radius: .673vw;
+    --font-rounded: 'Aeonik', sans-serif;
+    --font-ui: 'Aeonik', sans-serif;
+    --raise-shadow: 0px 3.048px 1.524px rgba(234, 238, 248, 0.35);
+    --hero-arrow-color: #E5804B;
+}
+
+/* --------------------------------------------------------------------------
+   3. Hero Container & Layout
+   -------------------------------------------------------------------------- */
+.hero-stack {
+    background: transparent !important;
+    position: relative;
+    width: 100%;
+}
+
+.intro {
+    background: 0 0;
+    place-items: center;
+    min-height: min(100vh, 1000px);
+    padding: max(96px, 6.32vw) max(min(153.8px, 12vw), 50vw - 544px) 80px;
+    display: grid;
+    position: relative;
+    box-sizing: border-box;
+}
+
+.hero-art {
+    aspect-ratio: 1400.06 / 449.64;
+    width: 100%;
+    max-width: 1400px;
+    margin: 0 auto;
+    position: relative;
+    container-type: inline-size;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    row-gap: 2.2cqw;
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+.hero-row {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    column-gap: 3.5cqw;
+}
+
+.hero-row > span,
+.hero-row > svg {
+    position: relative !important;
+    top: auto !important;
+    left: auto !important;
+}
+
+/* --------------------------------------------------------------------------
+   4. Typography Elements (Poster Fluid Sizing via cqw)
+   -------------------------------------------------------------------------- */
+.hero-row .w-we,
+.hero-row .w-turn,
+.hero-row .w-great,
+.hero-row .w-ideas,
+.hero-row .w-into,
+.hero-row .w-brands,
+.hero-row .w-people,
+.hero-row .w-remember {
+    width: auto !important;
+    height: 8.5cqw !important;
+}
+
+.w-we,
+.w-turn,
+.w-great,
+.w-ideas,
+.w-into,
+.w-brands,
+.w-people,
+.w-remember {
+    z-index: 9;
+    position: relative;
+    overflow: visible !important;
+    font-family: 'Aeonik', sans-serif;
+    font-weight: 500;
+    color: var(--fill-0, #1A1A1A);
+    white-space: nowrap;
+    text-transform: uppercase;
+    font-size: 8cqw;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    letter-spacing: 0.02em;
+}
+
+.w-we {
+    font-size: 9.5cqw;
+    justify-content: center;
+}
+
+/* --------------------------------------------------------------------------
+   5. Floating Avatars Stack
+   -------------------------------------------------------------------------- */
+.hero-row .hero-avatars {
+    width: auto !important;
+    height: 8.5cqw !important;
+}
+
+.hero-avatars {
+    z-index: 9;
+    align-items: center;
+    display: flex;
+    top: .571cqw;
+    left: 5.659cqw;
+    position: relative;
+}
+
+.hero-avatar {
+    background: #d9d9d9;
+    border: .21cqw solid #ffffff;
+    border-radius: 1.154cqw;
+    width: 8.181cqw;
+    height: 8.181cqw;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.hero-avatar:hover {
+    transform: translateY(-2px) scale(1.05);
+}
+
+.hero-avatar + .hero-avatar {
+    margin-left: -2.893cqw;
+}
+
+.hero-avatar img {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    object-fit: cover;
+    display: block;
+}
+
+.hero-avatar img.is-cover {
+    object-fit: cover;
+    width: 100%;
+    height: 100%;
+}
+
+.hero-avatar img.is-zoom {
+    width: 120%;
+    height: 120%;
+    top: -10%;
+    left: -10%;
+}
+
+/* --------------------------------------------------------------------------
+   6. Animated Loop Arrow SVG
+   -------------------------------------------------------------------------- */
+.hero-row .hero-arrow {
+    width: 17.51cqw !important;
+    height: 6.251cqw !important;
+}
+
+.hero-arrow {
+    z-index: 9;
+    overflow: visible;
+    display: block;
+}
+
+.hero-arrow__stroke {
+    stroke-dasharray: 450;
+    stroke-dashoffset: 0;
+    animation: drawArrow 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes drawArrow {
+    0% {
+        stroke-dashoffset: 450;
+        opacity: 0;
+    }
+    50% {
+        opacity: 1;
+    }
+    100% {
+        stroke-dashoffset: 0;
+        opacity: 1;
+    }
+}
+
+/* --------------------------------------------------------------------------
+   7. Interactive Reel Trigger & Full-Screen Frame
+   -------------------------------------------------------------------------- */
+.hero-row .hero-reel {
+    width: 17.137cqw !important;
+    height: 9.639cqw !important;
+}
+
+.hero-reel {
+    border-radius: 1.276cqw;
+    overflow: hidden;
+    position: relative;
+    background-color: #000000;
+    background-image: url('../hero/reel-teaser-poster.webp');
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    cursor: pointer;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+}
+
+.reel-full {
+    min-height: 100vh;
+    padding: max(20px, 4vw) max(24px, 11.325vw);
+    padding-top: calc(var(--nav-gap) * 2 + 64px);
+    background: 0 0;
+    place-items: start center;
+    display: grid;
+    box-sizing: border-box;
+    width: 100%;
+}
+
+.reel-full__card {
+    aspect-ratio: 1630 / 916.875;
+    border-radius: var(--radius, 14px);
+    width: 100%;
+    max-width: 1070px;
+    overflow: hidden;
+    background-image: url('../hero/reel-teaser-poster.webp');
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+/* --------------------------------------------------------------------------
+   8. Global WebGL Morph Overlay
+   -------------------------------------------------------------------------- */
+.reel-morph {
+    z-index: 9999 !important;
+    pointer-events: none;
+    opacity: 0;
+    width: 100vw;
+    height: 100vh;
+    position: fixed;
+    inset: 0;
+    transition: opacity 0.3s ease;
+}
+
+.reel-morph__canvas {
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+
+/* --------------------------------------------------------------------------
+   9. Responsive Breakpoints
+   -------------------------------------------------------------------------- */
+@media (width <= 768px) {
+    .intro {
+        padding-top: calc(var(--nav-gap) + 64px + 8.464vw);
+        place-items: start center;
+        min-height: auto;
+        padding-bottom: 4.688vw;
+    }
+
+    .hero-art {
+        row-gap: 2.8cqw;
+    }
+
+    .hero-row {
+        column-gap: 3cqw;
+    }
+
+    .hero-reel,
+    .reel-full__card {
+        background-image: url('../hero/reel-teaser-poster.webp');
+        background-position: 50%;
+        background-repeat: no-repeat;
+        background-size: cover;
+    }
+
+    .reel-full {
+        min-height: auto;
+        padding-top: 10.938vw;
+        padding-bottom: 0;
+    }
+}
+
+@media (width >= 769px) {
+    .intro {
+        padding-inline: calc((100% - var(--site-w)) / 2);
+        min-height: 52.65vw;
+        padding-top: 6.52vw;
+        padding-bottom: 5.435vw;
+    }
+
+    .reel-full {
+        padding-inline: 12.38vw;
+    }
+
+    .reel-full .reel-full__card {
+        max-width: none;
+        width: var(--site-w);
+    }
+}

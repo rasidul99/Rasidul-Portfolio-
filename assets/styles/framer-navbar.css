@@ -1,0 +1,651 @@
+/* ==========================================================================
+   MEET.FRAMER.MEDIA - 100% AUTHENTIC DYNAMIC NOTCH NAVBAR
+   Exact Reproduction with 3D Flipping Pill Hover Animation & Notch Mask
+   ========================================================================== */
+
+/* Outer Fixed Shell */
+.framer-navbar-root {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 64px;
+    z-index: 999990;
+    pointer-events: none;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    font-family: 'Aeonik', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-100%);
+    transition: transform 0.65s cubic-bezier(0.16, 1, 0.3, 1), 
+                opacity 0.5s ease, 
+                visibility 0.65s;
+}
+
+.framer-navbar-root.is-visible {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+/* Floating Top Notch Container (Desktop) */
+.framer-notch-wrapper {
+    position: relative;
+    width: 100%;
+    height: 64px;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    pointer-events: auto;
+}
+
+/* Flanking top bar strips (22px baseline) on left and right */
+.framer-top-bar-left,
+.framer-top-bar-right {
+    flex: 1;
+    height: 22px;
+    background-color: rgba(12, 12, 14, 0.70);
+    backdrop-filter: blur(32px);
+    -webkit-backdrop-filter: blur(32px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    pointer-events: none;
+    z-index: 1;
+}
+
+/* Dynamic Responsive Notch Container: Centered between left and right bars */
+.framer-notch-container {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 64px;
+    padding: 0 64px;
+    flex-shrink: 0;
+    z-index: 2;
+    transition: width 0.45s cubic-bezier(0.16, 1, 0.3, 1),
+                padding 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Dynamic 3-Part Scalable Notch Backdrop (Hugs the content with exact padding!) */
+.framer-notch-backdrop-dynamic {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 64px;
+    display: flex;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.notch-wing-left {
+    width: 64px;
+    height: 64px;
+    flex-shrink: 0;
+    background-color: rgba(12, 12, 14, 0.70);
+    backdrop-filter: blur(32px);
+    -webkit-backdrop-filter: blur(32px);
+    -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cpath d='M 0,0 L 0,22 C 30,22 34,64 64,64 L 64,0 Z' fill='black'/%3E%3C/svg%3E");
+    mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cpath d='M 0,0 L 0,22 C 30,22 34,64 64,64 L 64,0 Z' fill='black'/%3E%3C/svg%3E");
+}
+
+.notch-center-fill {
+    flex: 1;
+    height: 64px;
+    background-color: rgba(12, 12, 14, 0.70);
+    backdrop-filter: blur(32px);
+    -webkit-backdrop-filter: blur(32px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.notch-wing-right {
+    width: 64px;
+    height: 64px;
+    flex-shrink: 0;
+    background-color: rgba(12, 12, 14, 0.70);
+    backdrop-filter: blur(32px);
+    -webkit-backdrop-filter: blur(32px);
+    -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cpath d='M 0,64 C 30,64 34,22 64,22 L 64,0 L 0,0 Z' fill='black'/%3E%3C/svg%3E");
+    mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cpath d='M 0,64 C 30,64 34,22 64,22 L 64,0 L 0,0 Z' fill='black'/%3E%3C/svg%3E");
+}
+
+.notch-wing-line {
+    position: absolute;
+    top: 0;
+    width: 64px;
+    height: 64px;
+    pointer-events: none;
+    z-index: 2;
+}
+.notch-line-left { left: 0; }
+.notch-line-right { right: 0; }
+
+/* The Main Nav Elements Row inside the dynamic notch */
+.framer-notch-content {
+    position: relative;
+    z-index: 3;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    height: 48px;
+    padding: 0 4px;
+    transition: gap 0.45s cubic-bezier(0.16, 1, 0.3, 1),
+                padding 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Left Group */
+.framer-nav-group-left {
+    display: inline-flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 4px;
+    height: 48px;
+    padding: 4px 0;
+    max-width: 500px;
+    opacity: 1;
+    overflow: hidden;
+    white-space: nowrap;
+    flex-shrink: 0;
+    transition: max-width 0.45s cubic-bezier(0.16, 1, 0.3, 1),
+                opacity 0.35s ease,
+                gap 0.45s cubic-bezier(0.16, 1, 0.3, 1),
+                margin 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Right Group */
+.framer-nav-group-right {
+    display: inline-flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 4px;
+    height: 48px;
+    padding: 4px 0;
+    max-width: 500px;
+    opacity: 1;
+    overflow: hidden;
+    white-space: nowrap;
+    flex-shrink: 0;
+    transition: max-width 0.45s cubic-bezier(0.16, 1, 0.3, 1),
+                opacity 0.35s ease,
+                gap 0.45s cubic-bezier(0.16, 1, 0.3, 1),
+                margin 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Center Brand Area */
+.framer-nav-center-brand {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 14px;
+    flex-shrink: 0;
+    text-decoration: none;
+    cursor: pointer;
+    transition: padding 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* ==========================================================================
+   HERO MINI-COLLAPSED STATE (Only Logo 'R' Icon on Hero Section)
+   ========================================================================== */
+
+/* When mini-collapsed (on hero section without hover) */
+.framer-notch-container.is-mini-collapsed:not(:hover) .framer-nav-group-left,
+.framer-notch-container.is-mini-collapsed:not(:hover) .framer-nav-group-right {
+    max-width: 0 !important;
+    opacity: 0 !important;
+    gap: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    pointer-events: none !important;
+}
+
+.framer-notch-container.is-mini-collapsed:not(:hover) .framer-notch-content {
+    gap: 0 !important;
+    padding: 0 !important;
+}
+
+.framer-notch-container.is-mini-collapsed:not(:hover) .framer-nav-center-brand {
+    padding: 0 10px !important;
+}
+
+.framer-notch-container.is-mini-collapsed:not(:hover) .framer-logo-rest {
+    max-width: 0 !important;
+    opacity: 0 !important;
+    margin-left: 0 !important;
+}
+
+.framer-notch-container.is-mini-collapsed {
+    cursor: pointer;
+}
+
+/* Hovering over the notch container while mini-collapsed smoothly expands all menus */
+.framer-notch-container.is-mini-collapsed:hover .framer-nav-group-left,
+.framer-notch-container.is-mini-collapsed:hover .framer-nav-group-right {
+    max-width: 500px;
+    opacity: 1;
+    gap: 4px;
+    pointer-events: auto;
+}
+
+.framer-notch-container.is-mini-collapsed:hover .framer-notch-content {
+    gap: 8px;
+    padding: 0 4px;
+}
+
+.framer-notch-container.is-mini-collapsed:hover .framer-nav-center-brand {
+    padding: 0 14px;
+}
+
+.framer-brand-name {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    cursor: pointer;
+    overflow: hidden;
+    white-space: nowrap;
+    transition: opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+                transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* 2-Line Menu Icon for Scroll Down Collapsed state */
+.framer-notch-menu-icon {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+                transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.framer-notch-menu-icon svg {
+    display: block;
+}
+
+/* Scroll-Down State: Show 2-Line Menu Icon and Hide Logo */
+.framer-notch-container.is-menu-icon:not(:hover) .framer-brand-name {
+    opacity: 0 !important;
+    pointer-events: none !important;
+    transform: scale(0.6) !important;
+}
+
+.framer-notch-container.is-menu-icon:not(:hover) .framer-notch-menu-icon {
+    opacity: 1 !important;
+    pointer-events: auto !important;
+    transform: translate(-50%, -50%) scale(1) !important;
+}
+
+.framer-notch-container.is-menu-icon:not(:hover) .framer-nav-center-brand {
+    padding: 0 12px !important;
+}
+
+/* When hovered, always show full logo and hide menu icon */
+.framer-notch-container:hover .framer-brand-name {
+    opacity: 1 !important;
+    pointer-events: auto !important;
+    transform: scale(1) !important;
+}
+
+.framer-notch-container:hover .framer-notch-menu-icon {
+    opacity: 0 !important;
+    pointer-events: none !important;
+    transform: translate(-50%, -50%) scale(0.7) !important;
+}
+
+/* 'R' Logo (Default) */
+.framer-logo-r {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.framer-logo-r .logo-r {
+    height: 28px;
+    width: 21px;
+    display: block;
+    fill: #ffffff;
+    color: #ffffff;
+    transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* 'ASIDUL' Logo (Expands on Hover) */
+.framer-logo-rest {
+    display: inline-flex;
+    align-items: center;
+    max-width: 0;
+    opacity: 0;
+    overflow: hidden;
+    white-space: nowrap;
+    pointer-events: none;
+    margin-left: 0;
+    transition: max-width 0.45s cubic-bezier(0.16, 1, 0.3, 1),
+                opacity 0.35s ease,
+                margin-left 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.framer-logo-rest .logo-rest {
+    height: 28px;
+    width: 203px;
+    flex-shrink: 0;
+    display: block;
+    fill: #ffffff;
+    color: #ffffff;
+}
+
+/* Hover Expansion: R -> RASIDUL */
+.framer-nav-center-brand:hover .framer-logo-rest,
+.framer-brand-name:hover .framer-logo-rest,
+.framer-nav-center-brand.is-hovered .framer-logo-rest {
+    max-width: 215px;
+    opacity: 1;
+    margin-left: 4px;
+}
+
+/* Brand hover scale without glow */
+.framer-nav-center-brand:hover .framer-brand-logo-svg,
+.framer-brand-name:hover .framer-brand-logo-svg {
+    filter: none;
+}
+
+@media (max-width: 900px) {
+    .framer-logo-r .logo-r {
+        height: 22px;
+        width: 16.5px;
+    }
+    .framer-logo-rest .logo-rest {
+        height: 22px;
+        width: 160px;
+    }
+    .framer-nav-center-brand:hover .framer-logo-rest,
+    .framer-brand-name:hover .framer-logo-rest {
+        max-width: 170px;
+        margin-left: 3px;
+    }
+}
+
+/* ==========================================================================
+   3D FLIPPING PILL NAV ITEM (meet.framer.media exact interaction)
+   ========================================================================== */
+
+.framer-pill-item {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    cursor: pointer;
+    border-radius: 50px;
+    background-color: transparent;
+    border: 1px solid transparent;
+    padding: 0 18px;
+    height: 38px;
+    overflow: hidden;
+    transition: background-color 0.25s ease, 
+                border-color 0.25s ease,
+                transform 0.2s ease;
+}
+
+.framer-pill-text-wrap {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 20px;
+    perspective: 600px;
+}
+
+/* Hidden placeholder to calculate exact width */
+.framer-pill-ghost {
+    visibility: hidden;
+    opacity: 0;
+    font-family: 'Aeonik', -apple-system, BlinkMacSystemFont, sans-serif;
+    font-size: 14px;
+    font-weight: 400;
+    letter-spacing: 0.02em;
+    white-space: pre;
+    line-height: 1.2;
+}
+
+/* Text 1: Default White Text (Rolls up on hover, rolls back on leave) */
+.framer-pill-text-1 {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) rotateX(0deg);
+    font-family: 'Aeonik', -apple-system, BlinkMacSystemFont, sans-serif;
+    font-size: 14px;
+    font-weight: 400;
+    letter-spacing: 0.02em;
+    color: #ffffff;
+    white-space: pre;
+    transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease;
+    opacity: 1;
+    pointer-events: none;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    backface-visibility: hidden;
+}
+
+/* Text 2: Hover White Text (Rolls in from bottom on hover, rolls back on leave) */
+.framer-pill-text-2 {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, 50%) rotateX(-90deg);
+    font-family: 'Aeonik', -apple-system, BlinkMacSystemFont, sans-serif;
+    font-size: 14px;
+    font-weight: 400;
+    letter-spacing: 0.02em;
+    color: #ffffff;
+    white-space: pre;
+    transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease;
+    opacity: 0;
+    pointer-events: none;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    backface-visibility: hidden;
+}
+
+/* Rolling Text Animation Trigger */
+.framer-pill-item:hover .framer-pill-text-1 {
+    transform: translate(-50%, -150%) rotateX(90deg);
+    opacity: 0;
+}
+
+.framer-pill-item:hover .framer-pill-text-2 {
+    transform: translate(-50%, -50%) rotateX(0deg);
+    opacity: 1;
+}
+
+/* Pill Hover Transition */
+.framer-pill-item:hover {
+    background-color: transparent;
+    border-color: #ffffff;
+    box-shadow: none;
+    transform: none;
+}
+
+.framer-pill-item:active {
+    transform: none;
+}
+
+/* Pill Active Scrollspy Highlight */
+.framer-pill-item.is-active:not(:hover) {
+    background-color: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.35);
+    box-shadow: none;
+}
+
+.framer-pill-item.is-active:not(:hover) .framer-pill-text-1 {
+    color: #ffffff;
+    font-weight: 400;
+}
+
+/* Special styling for Resume Button */
+.framer-pill-resume {
+    background-color: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.22);
+    gap: 6px;
+    padding: 0 16px 0 18px;
+}
+
+.framer-pill-resume .resume-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: #ffffff;
+    transition: transform 0.25s ease, color 0.25s ease;
+}
+
+.framer-pill-resume:hover {
+    background-color: transparent;
+    border-color: #ffffff;
+    box-shadow: none;
+}
+
+.framer-pill-resume:hover .resume-icon {
+    color: #ffffff;
+    transform: translate(2px, -2px);
+}
+
+/* ==========================================================================
+   MOBILE & TABLET RESPONSIVE (meet.framer.media compact notch)
+   ========================================================================== */
+
+.framer-mobile-header {
+    display: none;
+    width: 100%;
+    padding: 0 20px;
+    height: 64px;
+    align-items: center;
+    justify-content: space-between;
+    position: relative;
+    z-index: 10;
+}
+
+.framer-mobile-notch-island {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    height: 48px;
+    padding: 0 16px;
+    background: rgba(12, 12, 14, 0.70);
+    backdrop-filter: blur(32px);
+    -webkit-backdrop-filter: blur(32px);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 9999px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+.framer-mobile-toggle {
+    width: 32px;
+    height: 30px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    color: #ffffff;
+}
+
+.framer-mobile-drawer {
+    display: none;
+    position: fixed;
+    top: 76px;
+    left: 50%;
+    transform: translateX(-50%) translateY(-12px);
+    width: calc(100% - 32px);
+    max-width: 440px;
+    background: rgba(14, 14, 16, 0.94);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 24px;
+    padding: 24px;
+    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.7);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.28s ease, transform 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+    z-index: 999998;
+}
+
+.framer-mobile-drawer.is-open {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateX(-50%) translateY(0);
+}
+
+.framer-mobile-nav-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.framer-mobile-nav-link {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 18px;
+    color: #ffffff;
+    font-size: 16px;
+    font-weight: 500;
+    text-decoration: none;
+    border-radius: 14px;
+    border: 1px solid transparent;
+    transition: border-color 0.2s ease, background-color 0.2s ease;
+}
+
+.framer-mobile-nav-link:hover {
+    background-color: transparent;
+    border-color: #ffffff;
+}
+
+.framer-mobile-resume-btn {
+    margin-top: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 15px;
+    background-color: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: #ffffff;
+    font-size: 16px;
+    font-weight: 500;
+    border-radius: 14px;
+    text-decoration: none;
+    transition: border-color 0.2s ease;
+}
+
+.framer-mobile-resume-btn:hover {
+    background-color: transparent;
+    border-color: #ffffff;
+    color: #ffffff;
+}
+
+/* Breakpoint for Mobile/Tablet */
+@media (max-width: 900px) {
+    .framer-notch-wrapper {
+        display: none !important;
+    }
+    .framer-mobile-header {
+        display: flex;
+        pointer-events: auto;
+    }
+    .framer-mobile-drawer {
+        display: block;
+    }
+}

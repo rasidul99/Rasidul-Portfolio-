@@ -1,0 +1,13 @@
+{
+  "name": "rasidul-portfolio",
+  "version": "1.0.0",
+  "description": "Rasidul Portfolio with 3D WebGL Liquid Mouse Ripple",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}

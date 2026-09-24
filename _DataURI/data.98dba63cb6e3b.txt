@@ -1,0 +1,1 @@
+chrome-extension://4f33d76e-e4e0-4cc5-9f7d-d398e153a239/content-scripts/floatingCTA.css

@@ -1,0 +1,1 @@
+chrome-extension://cnojnbdhbhnkbcieeekonklommdnndci/src/base/script.js
