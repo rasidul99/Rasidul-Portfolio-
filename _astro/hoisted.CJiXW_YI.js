@@ -25879,6 +25879,7 @@ class Route {
         }
         if (!t) {
             console.warn("route not found for path: " + this.path);
+            this.target = e[0] ? e[0].target : null;
             return;
         }
         this.target = t.target
@@ -34285,7 +34286,18 @@ class Preloader {
     show(e, t) {
         this._initCallback = e, this._startCallback = t, this.isActive = !0, properties.loader.start(r => {
             this.percentTarget = r
-        })
+        });
+        setTimeout(() => {
+            this.percentTarget = 1;
+            this.percent = 1;
+            this.percentToStart = 1;
+            if (!properties.hasInitialized) {
+                try { this._initCallback && this._initCallback(); } catch(err) {}
+            }
+            if (!properties.hasStarted) {
+                try { this._startCallback && this._startCallback(); } catch(err) {}
+            }
+        }, 1800);
     }
     hide() {}
     resize(e, t, r) {
@@ -34293,10 +34305,19 @@ class Preloader {
     }
     update(e) {
         if (!this.isActive || !this.domContainer) return;
-        this.percent = Math.min(this.percentTarget, this.percent + (settings.SKIP_ANIMATION ? 1 : this.percentTarget > this.percent ? e : 0) / this.MIN_PRELOAD_DURATION), this.percentTarget == 1 && (properties.hasInitialized || this._initCallback(), this.percentToStart = settings.SKIP_ANIMATION ? 1 : Math.min(taskManager.percent, this.percentToStart + e / this.MIN_DURATION_BETWEEN_INIT_AND_START));
+        this.percent = Math.min(this.percentTarget, this.percent + (settings.SKIP_ANIMATION ? 1 : this.percentTarget > this.percent ? e : 0) / this.MIN_PRELOAD_DURATION);
+        if (this.percentTarget >= 0.999) {
+            if (!properties.hasInitialized) {
+                try { this._initCallback(); } catch(err) {}
+            }
+            this.percentToStart = settings.SKIP_ANIMATION ? 1 : Math.min(1, Math.max(taskManager.percent, this.percentToStart + e / this.MIN_DURATION_BETWEEN_INIT_AND_START));
+        }
         let t = this.percentToStart * this.PERCENT_BETWEEN_INIT_AND_START + this.percent * (1 - this.PERCENT_BETWEEN_INIT_AND_START),
             r = 0;
-        t == 1 && (this.lineTransformTime += settings.SKIP_ANIMATION ? 1 : e, r = ease.expoInOut(math.saturate(this.lineTransformTime))), r == 1 && !properties.hasStarted && this._startCallback();
+        t >= 0.99 && (this.lineTransformTime += settings.SKIP_ANIMATION ? 1 : e, r = ease.expoInOut(math.saturate(this.lineTransformTime)));
+        if ((r >= 0.99 || t >= 0.99) && !properties.hasStarted) {
+            try { this._startCallback(); } catch(err) {}
+        }
         let n = settings.SKIP_ANIMATION ? +properties.hasStarted : math.saturate(properties.startTime);
         for (let a = 0; a < this.domDigits.length; a++) {
             let l = this.domDigits[a],
@@ -34308,7 +34329,10 @@ class Preloader {
                 g = u - f;
             l._domNums[0].innerHTML = f, l._domNums[1].innerHTML = p, l.style.transform = "translateY(" + -(g - ease.expoInOut(math.saturate(n * 1.2 - .2 * a / (this.domDigits.length - 1)))) * 50 + "%) translateY(-0.05em)"
         }
-        transitionOverlay.loadBarRatio = t, transitionOverlay.lineTransformRatio = r, transitionOverlay.contentShowRatio = n, n == 1 && this.domContainer && (this.domContainer.style.display = "none", this.isActive = !1)
+        transitionOverlay.loadBarRatio = t, transitionOverlay.lineTransformRatio = r, transitionOverlay.contentShowRatio = n;
+        if ((n >= 0.99 || t >= 0.99) && this.domContainer) {
+            this.domContainer.style.display = "none", this.isActive = !1;
+        }
     }
 }
 const preloader = new Preloader;
