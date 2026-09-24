@@ -17480,7 +17480,7 @@ function _onXmlHttpProgress(o) {
 }
 
 function _onXmlHttpChange() {
-    this.xmlhttp.readyState === 4 && this.xmlhttp.status === 200 && this._onLoad(this.xmlhttp)
+    this.xmlhttp.readyState === 4 && this._onLoad(this.xmlhttp)
 }
 
 function _onLoad$5() {
@@ -17659,11 +17659,11 @@ quickLoader$2.register(ImageItem$1);
 function load() {
     _super.load.apply(this, arguments);
     var o = this.content;
-    o.onload = this.boundOnLoad, o.src = this.url
+    o.onload = this.boundOnLoad, o.onerror = this.boundOnLoad, o.src = this.url
 }
 
 function _onLoad() {
-    delete this.content.onload, this.width = this.content.width, this.height = this.content.height, _super._onLoad.call(this)
+    delete this.content.onload, delete this.content.onerror, this.width = this.content.width || 1, this.height = this.content.height || 1, _super._onLoad.call(this)
 }
 
 function _isNotData(o) {
@@ -34289,8 +34289,11 @@ class Preloader {
     init() {}
     show(e, t) {
         this._initCallback = e, this._startCallback = t, this.isActive = !0, properties.loader.start(r => {
-            this.percentTarget = r
+            this.percentTarget = Math.max(this.percentTarget, r);
         });
+        setTimeout(() => {
+            this.percentTarget = 1;
+        }, 3500);
     }
     hide() {}
     resize(e, t, r) {
@@ -34299,7 +34302,7 @@ class Preloader {
     update(e) {
         if (!this.isActive || !this.domContainer) return;
         this.percent = Math.min(this.percentTarget, this.percent + (settings.SKIP_ANIMATION ? 1 : this.percentTarget > this.percent ? e : 0) / this.MIN_PRELOAD_DURATION);
-        if (this.percentTarget >= 0.999) {
+        if (this.percentTarget >= 0.95 || this.percent >= 0.68) {
             if (!properties.hasInitialized) {
                 try { this._initCallback(); } catch(err) { console.error(err); }
             }
