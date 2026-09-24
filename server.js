@@ -35,6 +35,13 @@ const server = http.createServer((req, res) => {
         reqPath = '/index.html';
     }
 
+    // Redirect disabled /about route to home
+    if (reqPath === '/about' || reqPath === '/about.html') {
+        res.writeHead(301, { Location: '/' });
+        res.end();
+        return;
+    }
+
     // Resolve file across mirrored domains
     let filePath = findFile(reqPath);
 
