@@ -31785,6 +31785,10 @@ class TransitionOverlay {
         return Math.min(1 - this.contentShowRatio, this.contentHideRatio)
     }
     update(e) {
+        if (properties.hasStarted && properties.startTime >= 0.5) {
+            this.canvas.style.display = "none";
+            return;
+        }
         if (this.activeRatio > 0) {
             let t = properties.viewportWidth + 2,
                 r = properties.viewportHeight + 2,
@@ -34287,17 +34291,6 @@ class Preloader {
         this._initCallback = e, this._startCallback = t, this.isActive = !0, properties.loader.start(r => {
             this.percentTarget = r
         });
-        setTimeout(() => {
-            this.percentTarget = 1;
-            this.percent = 1;
-            this.percentToStart = 1;
-            if (!properties.hasInitialized) {
-                try { this._initCallback && this._initCallback(); } catch(err) {}
-            }
-            if (!properties.hasStarted) {
-                try { this._startCallback && this._startCallback(); } catch(err) {}
-            }
-        }, 1800);
     }
     hide() {}
     resize(e, t, r) {
@@ -34308,15 +34301,15 @@ class Preloader {
         this.percent = Math.min(this.percentTarget, this.percent + (settings.SKIP_ANIMATION ? 1 : this.percentTarget > this.percent ? e : 0) / this.MIN_PRELOAD_DURATION);
         if (this.percentTarget >= 0.999) {
             if (!properties.hasInitialized) {
-                try { this._initCallback(); } catch(err) {}
+                try { this._initCallback(); } catch(err) { console.error(err); }
             }
-            this.percentToStart = settings.SKIP_ANIMATION ? 1 : Math.min(1, Math.max(taskManager.percent, this.percentToStart + e / this.MIN_DURATION_BETWEEN_INIT_AND_START));
+            this.percentToStart = settings.SKIP_ANIMATION ? 1 : Math.min(1, this.percentToStart + e / this.MIN_DURATION_BETWEEN_INIT_AND_START);
         }
         let t = this.percentToStart * this.PERCENT_BETWEEN_INIT_AND_START + this.percent * (1 - this.PERCENT_BETWEEN_INIT_AND_START),
             r = 0;
-        t >= 0.99 && (this.lineTransformTime += settings.SKIP_ANIMATION ? 1 : e, r = ease.expoInOut(math.saturate(this.lineTransformTime)));
-        if ((r >= 0.99 || t >= 0.99) && !properties.hasStarted) {
-            try { this._startCallback(); } catch(err) {}
+        t >= 0.999 && (this.lineTransformTime += settings.SKIP_ANIMATION ? 1 : e, r = ease.expoInOut(math.saturate(this.lineTransformTime)));
+        if (r >= 0.999 && !properties.hasStarted) {
+            try { this._startCallback(); } catch(err) { console.error(err); }
         }
         let n = settings.SKIP_ANIMATION ? +properties.hasStarted : math.saturate(properties.startTime);
         for (let a = 0; a < this.domDigits.length; a++) {
@@ -34330,7 +34323,7 @@ class Preloader {
             l._domNums[0].innerHTML = f, l._domNums[1].innerHTML = p, l.style.transform = "translateY(" + -(g - ease.expoInOut(math.saturate(n * 1.2 - .2 * a / (this.domDigits.length - 1)))) * 50 + "%) translateY(-0.05em)"
         }
         transitionOverlay.loadBarRatio = t, transitionOverlay.lineTransformRatio = r, transitionOverlay.contentShowRatio = n;
-        if ((n >= 0.99 || t >= 0.99) && this.domContainer) {
+        if (n >= 0.999 && this.domContainer) {
             this.domContainer.style.display = "none", this.isActive = !1;
         }
     }
