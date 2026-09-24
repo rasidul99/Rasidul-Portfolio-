@@ -4,10 +4,11 @@
   "description": "Rasidul Portfolio with 3D WebGL Liquid Mouse Ripple",
   "main": "server.js",
   "scripts": {
+    "build": "echo 'Static build ready'",
     "start": "node server.js",
     "dev": "node server.js"
   },
   "keywords": [],
-  "author": "",
+  "author": "Rasidul Islam",
   "license": "ISC"
 }
