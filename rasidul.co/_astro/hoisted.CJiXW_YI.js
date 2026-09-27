@@ -31596,7 +31596,14 @@ class EndSection {
         if (!this.domContainer) return;
         let t = scrollManager.getDomRange(this.domContainer),
             r = t.isActive;
-        pagesManager.scrollTargetPage && (flipAnimation.isActive = pagesManager.scrollTargetPage.hasEndVisual, flipAnimation.colorHex = pagesManager.scrollTargetPage.endVisualColor, flipAnimation.useTextured = pagesManager.scrollTargetPage.endVisualUseTextured, flipAnimation.container.visible = flipAnimation.isActive, flipAnimation.opacity = math.fit(pagesManager.scrollTargetPage.hideRatio, 0, .3, 1, 0));
+        let isEndActive = r && pagesManager.scrollTargetPage && pagesManager.scrollTargetPage.hasEndVisual;
+        flipAnimation.isActive = !!isEndActive;
+        flipAnimation.container.visible = !!isEndActive;
+        if (isEndActive) {
+            flipAnimation.colorHex = pagesManager.scrollTargetPage.endVisualColor;
+            flipAnimation.useTextured = pagesManager.scrollTargetPage.endVisualUseTextured;
+            flipAnimation.opacity = math.fit(pagesManager.scrollTargetPage.hideRatio, 0, .3, 1, 0);
+        }
         let n = math.fit(t.hideScreenOffset, -.75, 0, 0, 1),
             a = math.mix(1, .9, n);
         if (this.offsetY = Math.max(0, -t.screenY), this.outerContainer.style.transform = `translate3d(0, ${this.offsetY-Math.max(0,t.hideScreenOffset)*properties.viewportHeight}px, 0)`, this.domContent.style.transform = `translate3d(-50%,-50%,0) scale3d(${a}, ${a}, ${a})`, r) {
@@ -31638,7 +31645,7 @@ class EndSection {
             this.domTitleTopDecoration.style.transform = `scale3d(${math.fit(this.hoverRatio,0,.7,0,1,ease.cubicInOut)}, 1, 1)`;
             let g = math.fit(this.hoverRatio, .2, 1, 0, 1, ease.cubicInOut);
             this.domTitleBottomLeftDecoration.style.transform = `scale3d(${math.fit(g,0,.35,0,1)}, 1, 1)`, this.domTitleBottomRightDecoration.style.transform = `scale3d(${math.fit(g,.4,1,0,1)}, 1, 1)`
-        } else this._needsReset = !0, flipAnimation.isActive = !1;
+        } else this._needsReset = !0, flipAnimation.isActive = !1, flipAnimation.container.visible = !1;
         flipAnimation.update(e)
     }
     _splitText() {
