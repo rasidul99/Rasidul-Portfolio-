@@ -18434,7 +18434,8 @@ class Task {
     }
     createCallbackFunc(e) {
         let t;
-        return this._completeTotal++, e.isRawShaderMaterial || e.isShaderMaterial ? t = this.createShaderMaterialFunc(e) : e.isObject3D ? t = this.createCompileSceneFunc(e) : e.isTexture ? t = this.createInitTextureFunc(e) : t = e.bind(this, this._onComplete), t
+        if (!e) return this._completeTotal++, () => { this._onComplete(); };
+        return this._completeTotal++, (e.isRawShaderMaterial || e.isShaderMaterial) ? t = this.createShaderMaterialFunc(e) : e.isObject3D ? t = this.createCompileSceneFunc(e) : e.isTexture ? t = this.createInitTextureFunc(e) : typeof e === "function" ? t = e.bind(this, this._onComplete) : t = () => { this._onComplete(); }, t
     }
     createShaderMaterialFunc(e) {
         return function() {
@@ -24427,7 +24428,7 @@ class GoalTunnelGlass {
             extensions: {
                 derivatives: !0
             }
-        })), this.mesh.visible = !1, this.mesh.frustumCulled = !1, this.mesh.renderOrder = 1e3, this.container.add(this.mesh), this.mesh.onBeforeRender = this._onBeforeRender.bind(this), this.mesh.onAfterRender = this._onAfterRender.bind(this)
+        })), this.mesh.visible = !1, this.mesh.frustumCulled = !1, this.mesh.renderOrder = 1e3, this.container.add(this.mesh), this.mesh.onBeforeRender = this._onBeforeRender.bind(this), this.mesh.onAfterRender = this._onAfterRender.bind(this), taskManager && taskManager.add && taskManager.add(this.mesh)
     }
     _onBeforeRender(e, t, r) {
         let n = cameraControls._camera;
@@ -24445,7 +24446,7 @@ class GoalTunnelGlass {
         this.sharedUniforms.u_positionTexture.value = fboHelper.createDataTexture(r, this.PIECE_COUNT, n, !0, !0), this.sharedUniforms.u_orientTexture.value = fboHelper.createDataTexture(e.attributes.orient.array, this.PIECE_COUNT, n, !0, !0)
     }
     init() {
-        taskManager.add(this.mesh)
+        this.mesh && taskManager.add(this.mesh)
     }
     resize(e, t) {}
     update(e) {
@@ -25611,11 +25612,11 @@ class GoalSection {
         }), this.frameBgMesh.renderOrder = -1, homePage.preUfxContainer.add(this.frameBgMesh), this.frameBgMesh.visible = !1, homeGoalSectionTunnelTitle.init(e), visuals.stage3DList.push(goalTunnels), goalTunnels.preInit(), this.lineVisual = new Line(1), this.lineVisual.preInit()
     }
     init() {
-        this._placeholderTexture1 = properties.loader.load(settings.TEXTURE_PATH + "/tunnels/tablet.png", {
+        this._placeholderTexture1 = properties.loader.load(settings.TEXTURE_PATH + "tunnels/tablet.png", {
             type: "texture",
             flipY: !1,
             minFilter: LinearFilter
-        }).content, this._placeholderTexture2 = properties.loader.load(settings.TEXTURE_PATH + "/tunnels/desktop.png", {
+        }).content, this._placeholderTexture2 = properties.loader.load(settings.TEXTURE_PATH + "tunnels/desktop.png", {
             type: "texture",
             flipY: !1,
             minFilter: LinearFilter
@@ -27509,7 +27510,10 @@ class AboutHeroGround {
     blurCacheRenderTarget = null;
     preInit() {
         properties.loader.add(settings.MODEL_PATH + "about/terrain.buf", {
-            onLoad: e => this.geometry = e
+            onLoad: e => {
+                this.geometry = e;
+                this.groundMesh && (this.groundMesh.geometry = e);
+            }
         }), this.texture = properties.loader.load(settings.TEXTURE_PATH + "about/terrain_shadow_light_height.webp", {
             type: "texture",
             flipY: !0,
@@ -27533,7 +27537,7 @@ class AboutHeroGround {
                 }
             }, light.sharedUniforms, blueNoise.sharedUniforms),
             fragmentShader: frag$b
-        })), this.mesh.material.defines.LIGHT_SHADOW_SAMPLE_COUNT = 8, this.groundMesh = new Mesh(this.geometry, new ShaderMaterial({
+        })), this.mesh.material.defines.LIGHT_SHADOW_SAMPLE_COUNT = 8, this.groundMesh = new Mesh(this.geometry || new BufferGeometry, new ShaderMaterial({
             uniforms: Object.assign({
                 u_texture: {
                     value: this.texture
@@ -27565,7 +27569,10 @@ class AboutHeroGround {
         let r = properties.renderer,
             n = fboHelper.getColorState(),
             a = r.getRenderTarget();
-        r.setRenderTarget(this.currRenderTarget), r.setClearColor(16777215, 1), this.mesh.material.uniforms.u_blueNoiseOffset.value.set(~~(Math.random() * 128), ~~(Math.random() * 128)), this.mesh.material.uniforms.u_prevTexture.value = this.prevRenderTarget.texture, fboHelper.renderMesh(this.mesh, this.currRenderTarget), r.setRenderTarget(a), fboHelper.setColorState(n), sim.sharedUniforms.u_noiseStableFactor.value, this.groundMesh.material.uniforms.u_groundShadowTexture.value = this.currRenderTarget.texture, this.groundMesh.material.uniforms.u_bgColor.value.copy(properties.bgColor), this.groundMesh.material.uniforms.u_color.value.set("#fff")
+        r.setRenderTarget(this.currRenderTarget), r.setClearColor(16777215, 1), this.mesh.material.uniforms.u_blueNoiseOffset.value.set(~~(Math.random() * 128), ~~(Math.random() * 128)), this.mesh.material.uniforms.u_prevTexture.value = this.prevRenderTarget.texture, fboHelper.renderMesh(this.mesh, this.currRenderTarget), r.setRenderTarget(a), fboHelper.setColorState(n), sim.sharedUniforms.u_noiseStableFactor.value;
+        if (this.groundMesh && this.groundMesh.material && this.groundMesh.material.uniforms) {
+            this.groundMesh.material.uniforms.u_groundShadowTexture.value = this.currRenderTarget.texture, this.groundMesh.material.uniforms.u_bgColor.value.copy(properties.bgColor), this.groundMesh.material.uniforms.u_color.value.set("#fff");
+        }
     }
 }
 const aboutHeroGround = new AboutHeroGround,
