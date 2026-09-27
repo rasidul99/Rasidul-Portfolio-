@@ -25072,12 +25072,13 @@ class GoalTunnelsBackground {
             minFilter: LinearFilter
         }).content, properties.loader.add(settings.MODEL_PATH + "tunnels/earth_card.buf", {
             onLoad: e => {
-                this.geo = e
+                this.geo = e;
+                if (this.mesh) this.mesh.geometry = e;
             }
         })
     }
     init() {
-        this.mesh = new Mesh(this.geo, new ShaderMaterial({
+        this.mesh = new Mesh(this.geo || new BufferGeometry, new ShaderMaterial({
             uniforms: Object.assign({
                 u_bgColor: {
                     value: new Color
@@ -25097,12 +25098,14 @@ class GoalTunnelsBackground {
     update(e) {
         const t = math.saturate(homeGoalSectionRanges.getRange("blackFrameShow").ratio),
             r = math.saturate(homeGoalSectionRanges.getRange("blackFrameIn").ratio);
-        this.mesh.material.uniforms.u_bgColor.value.copy(properties.bgColor),
-        this.mesh.material.uniforms.u_earthTexture.value = window.tunnelCustomMode ? getTunnelVideoTexture() : this.earthTexture,
-        this.mesh.position.y = -(10 * (1 - t) + 2.5 + 30 * r),
+        if (this.mesh && this.mesh.material && this.mesh.material.uniforms) {
+            this.mesh.material.uniforms.u_bgColor.value.copy(properties.bgColor),
+            this.mesh.material.uniforms.u_earthTexture.value = window.tunnelCustomMode ? getTunnelVideoTexture() : this.earthTexture;
+        }
+        this.mesh && (this.mesh.position.y = -(10 * (1 - t) + 2.5 + 30 * r),
         this.mesh.scale.setScalar(math.fit(r, 0, .5, 40, 70)),
-        this.container.rotation.x = math.fit(r, 0, .5, 0, -1),
-        this.mesh.visible = r < 1
+        this.mesh.visible = r < 1);
+        this.container.rotation.x = math.fit(r, 0, .5, 0, -1)
     }
 }
 const goalTunnelsBackground = new GoalTunnelsBackground,
@@ -25125,14 +25128,22 @@ class GoalWhiteTunnelParticles {
     constructor() {}
     preInit() {
         properties.loader.add(settings.MODEL_PATH + "tunnels/diamond.buf", {
-            onLoad: e => this.geo = e
+            onLoad: e => {
+                this.geo = e;
+                if (this.instancedGeo && e && e.attributes) {
+                    for (let u in e.attributes) this.instancedGeo.setAttribute(u, e.attributes[u]);
+                    this.instancedGeo.setIndex(e.index);
+                }
+            }
         })
     }
     init() {
-        let e = this.geo,
-            t = new InstancedBufferGeometry;
-        for (let u in e.attributes) t.attributes[u] = e.attributes[u];
-        t.index = e.index;
+        let e = this.geo || new BufferGeometry,
+            t = this.instancedGeo = new InstancedBufferGeometry;
+        if (e.attributes) {
+            for (let u in e.attributes) t.setAttribute(u, e.attributes[u]);
+            t.index = e.index;
+        }
         let r = math.getSeedRandomFn("diamonds-3");
         const n = new Float32Array(this.PARTICLE_COUNT * 3),
             a = new Float32Array(this.PARTICLE_COUNT * 3),
@@ -27449,7 +27460,7 @@ class AboutHeroRocks {
             vertexShader: vert$8,
             fragmentShader: frag$c
         }));
-        l.frustumCulled = !1, t ? (this.shadowMeshList[e] = l, l.material.defines.IS_SHADOW = !0, l.material.fragmentShader = lightShadowMapFrag, l.material.side = DoubleSide) : this.meshList[e] = l
+        l.frustumCulled = !1, t ? (this.shadowMeshList[e] = l, l.material.defines.IS_SHADOW = !0, l.material.fragmentShader = lightShadowMapFrag, l.material.side = DoubleSide) : (this.meshList[e] = l, this.container && this.container.add(l))
     }
     _onRockAnimationLoad(e, t) {
         let r = t.attributes.position.array,
@@ -27460,7 +27471,7 @@ class AboutHeroRocks {
         this.meshAnimationUniformList[e].u_posRandTexture.value = fboHelper.createDataTexture(a, this.ROCK_PIECE_COUNT, this.FRAME_COUNT, !0, !0), this.meshAnimationUniformList[e].u_orientTexture.value = fboHelper.createDataTexture(n, this.ROCK_PIECE_COUNT, this.FRAME_COUNT, !0, !0)
     }
     init() {
-        for (let e = 0; e < 4; e++) this.container.add(this.meshList[e])
+        for (let e = 0; e < 4; e++) this.meshList[e] && this.container.add(this.meshList[e])
     }
     update(e) {
         if (properties.hasInitialized) {
@@ -28134,6 +28145,7 @@ class AboutHeroLetters {
     }
     init() {}
     _onBeforeRender() {
+        if (!this.meshList[0]) return;
         (properties.width != this.rt.width || properties.height != this.rt.height) && this.rt.setSize(properties.width, properties.height);
         let e = properties.renderer,
             t = e.getRenderTarget(),
@@ -28210,11 +28222,17 @@ class AboutHero extends Stage3D {
             minFilter: LinearFilter,
             type: "texture"
         }).content, shaderHelper.addChunk("aboutHeroVisualFinal_vert", aboutHeroVisualFinalVert), shaderHelper.addChunk("aboutHeroVisualFinal_frag", aboutHeroVisualFinalFrag), properties.loader.add(settings.MODEL_PATH + "about/camera_spline.buf", {
-            onLoad: e => this.cameraSplineGeo = e
+            onLoad: e => {
+                this.cameraSplineGeo = e;
+                if (e && e.attributes) {
+                    this.cameraSplinePositions = e.attributes.position;
+                    this.cameraSplineOrientation = e.attributes.orient;
+                }
+            }
         }), light.preInit(), sim.preInit(), lightField.preInit(), aboutHeroParticles.preInit(), aboutHeroRocks.preInit(), aboutHeroGround.preInit(), aboutHeroLines.preInit(), aboutHeroPerson$1.preInit(), aboutHeroFog.preInit(), aboutHeroHalo.preInit(), aboutHeroFaces.preInit(), aboutHeroLetters.preInit()
     }
     init() {
-        light.init(), sim.init(), lightField.init(), aboutHeroParticles.init(), aboutHeroRocks.init(), aboutHeroGround.init(), aboutHeroLines.init(), aboutHeroPerson$1.init(), aboutHeroFog.init(), aboutHeroScatter.init(), aboutHeroHalo.init(), aboutHeroFaces.init(), aboutHeroLetters.init(), this.add(aboutHeroParticles.container), this.sceneContainer.add(aboutHeroRocks.container), this.sceneContainer.add(aboutHeroPerson$1.container), this.sceneContainer.add(aboutHeroFog.container), this.add(this.sceneContainer), this.add(aboutHeroGround.container), this.add(aboutHeroHalo.container), this.hudContainer.add(aboutHeroLines.container), this.add(this.hudContainer), aboutPageHeroEfxPrepass.scene.add(aboutHeroFaces.container), aboutPageHeroEfxPrepass.scene.add(aboutHeroLetters.container), this.cameraSplinePositions = this.cameraSplineGeo.attributes.position, this.cameraSplineOrientation = this.cameraSplineGeo.attributes.orient, taskManager.add(this), taskManager.add(aboutPageHeroEfxPrepass.scene)
+        light.init(), sim.init(), lightField.init(), aboutHeroParticles.init(), aboutHeroRocks.init(), aboutHeroGround.init(), aboutHeroLines.init(), aboutHeroPerson$1.init(), aboutHeroFog.init(), aboutHeroScatter.init(), aboutHeroHalo.init(), aboutHeroFaces.init(), aboutHeroLetters.init(), this.add(aboutHeroParticles.container), this.sceneContainer.add(aboutHeroRocks.container), this.sceneContainer.add(aboutHeroPerson$1.container), this.sceneContainer.add(aboutHeroFog.container), this.add(this.sceneContainer), this.add(aboutHeroGround.container), this.add(aboutHeroHalo.container), this.hudContainer.add(aboutHeroLines.container), this.add(this.hudContainer), aboutPageHeroEfxPrepass.scene.add(aboutHeroFaces.container), aboutPageHeroEfxPrepass.scene.add(aboutHeroLetters.container), this.cameraSplinePositions = (this.cameraSplineGeo && this.cameraSplineGeo.attributes && this.cameraSplineGeo.attributes.position) ? this.cameraSplineGeo.attributes.position : { array: new Float32Array(600), count: 200 }, this.cameraSplineOrientation = (this.cameraSplineGeo && this.cameraSplineGeo.attributes && this.cameraSplineGeo.attributes.orient) ? this.cameraSplineGeo.attributes.orient : { array: new Float32Array(800) }, taskManager.add(this), taskManager.add(aboutPageHeroEfxPrepass.scene)
     }
     resize(e, t) {
         aboutHeroFog.resize(e, t), aboutHeroHalo.resize(e, t), aboutHeroFaces.resize(e, t)
