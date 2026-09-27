@@ -20933,7 +20933,15 @@ class Line {
     }
     preInit() {
         this.container.add(this.innerContainer), properties.loader.add(settings.MODEL_PATH + "lines/" + this.lineData.fileName + ".buf", {
-            onLoad: e => this.geometry = e
+            onLoad: e => {
+                this.geometry = e;
+                if (this.mesh) this.mesh.geometry = e;
+                if (e && e.attributes && e.attributes.position) {
+                    const { array: posE, count: posT } = e.attributes.position;
+                    this.lineRatioArray = new Float32Array(posT);
+                    for (let rIdx = 0; rIdx < posT; rIdx++) this.lineRatioArray[rIdx] = posE[rIdx * 3 + 2];
+                }
+            }
         })
     }
     init() {
@@ -21008,6 +21016,12 @@ class Line {
     }
     update(e, t, r = 0) {
         if (!this.geometry || !this.geometry.attributes || !this.geometry.attributes.CP || !this.geometry.attributes.Cd || !this.geometry.attributes.position) return;
+        if (!this.lineRatioArray && this.geometry.attributes.position) {
+            const { array: posE, count: posT } = this.geometry.attributes.position;
+            this.lineRatioArray = new Float32Array(posT);
+            for (let rIdx = 0; rIdx < posT; rIdx++) this.lineRatioArray[rIdx] = posE[rIdx * 3 + 2];
+        }
+        if (!this.lineRatioArray || !this.lineRatioArray.length) return;
         const isDark = document.documentElement.classList.contains("is-black-bg") ? 1 : 0;
         this._darkRatio = math.mix(this._darkRatio !== void 0 ? this._darkRatio : 0, isDark, 1 - Math.exp(-6 * e));
         this.mesh && this.mesh.material && (this.mesh.material.uniforms.u_color0.value.copy(this.color0Light).lerp(this.color0Dark, this._darkRatio), this.mesh.material.uniforms.u_color1.value.copy(this.color1Light).lerp(this.color1Dark, this._darkRatio));
