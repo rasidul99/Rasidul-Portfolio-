@@ -4064,7 +4064,7 @@ const _inverseMatrix$3 = new Matrix4,
     _intersectionPointWorld = new Vector3;
 class Mesh extends Object3D {
     constructor(e = new BufferGeometry, t = new MeshBasicMaterial) {
-        super(), this.isMesh = !0, this.type = "Mesh", this.geometry = e, this.material = t, this.updateMorphTargets()
+        super(), this.isMesh = !0, this.type = "Mesh", this.geometry = e || new BufferGeometry, this.material = t, this.updateMorphTargets()
     }
     copy(e, t) {
         return super.copy(e, t), e.morphTargetInfluences !== void 0 && (this.morphTargetInfluences = e.morphTargetInfluences.slice()), e.morphTargetDictionary !== void 0 && (this.morphTargetDictionary = Object.assign({}, e.morphTargetDictionary)), this.material = Array.isArray(e.material) ? e.material.slice() : e.material, this.geometry = e.geometry, this
@@ -18434,8 +18434,7 @@ class Task {
     }
     createCallbackFunc(e) {
         let t;
-        if (!e) return this._completeTotal++, () => { this._onComplete(); };
-        return this._completeTotal++, (e.isRawShaderMaterial || e.isShaderMaterial) ? t = this.createShaderMaterialFunc(e) : e.isObject3D ? t = this.createCompileSceneFunc(e) : e.isTexture ? t = this.createInitTextureFunc(e) : typeof e === "function" ? t = e.bind(this, this._onComplete) : t = () => { this._onComplete(); }, t
+        return this._completeTotal++, e.isRawShaderMaterial || e.isShaderMaterial ? t = this.createShaderMaterialFunc(e) : e.isObject3D ? t = this.createCompileSceneFunc(e) : e.isTexture ? t = this.createInitTextureFunc(e) : t = e.bind(this, this._onComplete), t
     }
     createShaderMaterialFunc(e) {
         return function() {
@@ -20945,6 +20944,7 @@ class Line {
         })
     }
     init() {
+        if (this._hasInit) return; this._hasInit = !0;
         this.mesh = new Mesh(this.geometry, new ShaderMaterial({
             uniforms: {
                 u_showRatio: {
@@ -24442,7 +24442,7 @@ class GoalTunnelGlass {
             extensions: {
                 derivatives: !0
             }
-        })), this.mesh.visible = !1, this.mesh.frustumCulled = !1, this.mesh.renderOrder = 1e3, this.container.add(this.mesh), this.mesh.onBeforeRender = this._onBeforeRender.bind(this), this.mesh.onAfterRender = this._onAfterRender.bind(this), taskManager && taskManager.add && taskManager.add(this.mesh)
+        })), this.mesh.visible = !1, this.mesh.frustumCulled = !1, this.mesh.renderOrder = 1e3, this.container.add(this.mesh), this.mesh.onBeforeRender = this._onBeforeRender.bind(this), this.mesh.onAfterRender = this._onAfterRender.bind(this)
     }
     _onBeforeRender(e, t, r) {
         let n = cameraControls._camera;
@@ -24460,7 +24460,7 @@ class GoalTunnelGlass {
         this.sharedUniforms.u_positionTexture.value = fboHelper.createDataTexture(r, this.PIECE_COUNT, n, !0, !0), this.sharedUniforms.u_orientTexture.value = fboHelper.createDataTexture(e.attributes.orient.array, this.PIECE_COUNT, n, !0, !0)
     }
     init() {
-        this.mesh && taskManager.add(this.mesh)
+        taskManager.add(this.mesh)
     }
     resize(e, t) {}
     update(e) {
@@ -25086,13 +25086,12 @@ class GoalTunnelsBackground {
             minFilter: LinearFilter
         }).content, properties.loader.add(settings.MODEL_PATH + "tunnels/earth_card.buf", {
             onLoad: e => {
-                this.geo = e;
-                if (this.mesh) this.mesh.geometry = e;
+                this.geo = e
             }
         })
     }
     init() {
-        this.mesh = new Mesh(this.geo || new BufferGeometry, new ShaderMaterial({
+        this.mesh = new Mesh(this.geo, new ShaderMaterial({
             uniforms: Object.assign({
                 u_bgColor: {
                     value: new Color
@@ -25112,14 +25111,12 @@ class GoalTunnelsBackground {
     update(e) {
         const t = math.saturate(homeGoalSectionRanges.getRange("blackFrameShow").ratio),
             r = math.saturate(homeGoalSectionRanges.getRange("blackFrameIn").ratio);
-        if (this.mesh && this.mesh.material && this.mesh.material.uniforms) {
-            this.mesh.material.uniforms.u_bgColor.value.copy(properties.bgColor),
-            this.mesh.material.uniforms.u_earthTexture.value = window.tunnelCustomMode ? getTunnelVideoTexture() : this.earthTexture;
-        }
-        this.mesh && (this.mesh.position.y = -(10 * (1 - t) + 2.5 + 30 * r),
+        this.mesh.material.uniforms.u_bgColor.value.copy(properties.bgColor),
+        this.mesh.material.uniforms.u_earthTexture.value = window.tunnelCustomMode ? getTunnelVideoTexture() : this.earthTexture,
+        this.mesh.position.y = -(10 * (1 - t) + 2.5 + 30 * r),
         this.mesh.scale.setScalar(math.fit(r, 0, .5, 40, 70)),
-        this.mesh.visible = r < 1);
-        this.container.rotation.x = math.fit(r, 0, .5, 0, -1)
+        this.container.rotation.x = math.fit(r, 0, .5, 0, -1),
+        this.mesh.visible = r < 1
     }
 }
 const goalTunnelsBackground = new GoalTunnelsBackground,
@@ -25142,22 +25139,14 @@ class GoalWhiteTunnelParticles {
     constructor() {}
     preInit() {
         properties.loader.add(settings.MODEL_PATH + "tunnels/diamond.buf", {
-            onLoad: e => {
-                this.geo = e;
-                if (this.instancedGeo && e && e.attributes) {
-                    for (let u in e.attributes) this.instancedGeo.setAttribute(u, e.attributes[u]);
-                    this.instancedGeo.setIndex(e.index);
-                }
-            }
+            onLoad: e => this.geo = e
         })
     }
     init() {
-        let e = this.geo || new BufferGeometry,
-            t = this.instancedGeo = new InstancedBufferGeometry;
-        if (e.attributes) {
-            for (let u in e.attributes) t.setAttribute(u, e.attributes[u]);
-            t.index = e.index;
-        }
+        let e = this.geo,
+            t = new InstancedBufferGeometry;
+        for (let u in e.attributes) t.attributes[u] = e.attributes[u];
+        t.index = e.index;
         let r = math.getSeedRandomFn("diamonds-3");
         const n = new Float32Array(this.PARTICLE_COUNT * 3),
             a = new Float32Array(this.PARTICLE_COUNT * 3),
@@ -25637,6 +25626,7 @@ class GoalSection {
         }), this.frameBgMesh.renderOrder = -1, homePage.preUfxContainer.add(this.frameBgMesh), this.frameBgMesh.visible = !1, homeGoalSectionTunnelTitle.init(e), visuals.stage3DList.push(goalTunnels), goalTunnels.preInit(), this.lineVisual = new Line(1), this.lineVisual.preInit()
     }
     init() {
+        if (this._hasInit) return; this._hasInit = !0;
         this._placeholderTexture1 = properties.loader.load(settings.TEXTURE_PATH + "tunnels/tablet.png", {
             type: "texture",
             flipY: !1,
@@ -26786,20 +26776,23 @@ class HomePage extends Page {
         }
     }
     init() {
-        homeHeroSection.init(), homeReelSection.init(), homeFeaturedSection.init(), homeGoalSection.init();
+        try { homeHeroSection.init(); } catch(e) { console.error(e); }
+        try { homeReelSection.init(); } catch(e) { console.error(e); }
+        try { homeFeaturedSection.init(); } catch(e) { console.error(e); }
+        try { homeGoalSection.init(); } catch(e) { console.error(e); }
         if (this.domContainer.querySelector("#about-who")) {
-            aboutWhoSection.init();
+            try { aboutWhoSection.init(); } catch(e) { console.error(e); }
         }
         if (this.domContainer.querySelector("#about-clients")) {
-            aboutClientSection.init();
+            try { aboutClientSection.init(); } catch(e) { console.error(e); }
         }
         if (this.domContainer.querySelector("#about-award")) {
-            aboutAwardSection.init();
+            try { aboutAwardSection.init(); } catch(e) { console.error(e); }
         }
         if (this.domContainer.querySelector("#about-capability")) {
-            aboutCapabilitySection.init();
+            try { aboutCapabilitySection.init(); } catch(e) { console.error(e); }
         }
-        super.init()
+        super.init();
     }
     hasProject(e) {
         return homeFeaturedSection.projectItemList ? homeFeaturedSection.projectItemList.hasProject(e) : !1
@@ -27474,7 +27467,7 @@ class AboutHeroRocks {
             vertexShader: vert$8,
             fragmentShader: frag$c
         }));
-        l.frustumCulled = !1, t ? (this.shadowMeshList[e] = l, l.material.defines.IS_SHADOW = !0, l.material.fragmentShader = lightShadowMapFrag, l.material.side = DoubleSide) : (this.meshList[e] = l, this.container && this.container.add(l))
+        l.frustumCulled = !1, t ? (this.shadowMeshList[e] = l, l.material.defines.IS_SHADOW = !0, l.material.fragmentShader = lightShadowMapFrag, l.material.side = DoubleSide) : this.meshList[e] = l
     }
     _onRockAnimationLoad(e, t) {
         let r = t.attributes.position.array,
@@ -27485,7 +27478,7 @@ class AboutHeroRocks {
         this.meshAnimationUniformList[e].u_posRandTexture.value = fboHelper.createDataTexture(a, this.ROCK_PIECE_COUNT, this.FRAME_COUNT, !0, !0), this.meshAnimationUniformList[e].u_orientTexture.value = fboHelper.createDataTexture(n, this.ROCK_PIECE_COUNT, this.FRAME_COUNT, !0, !0)
     }
     init() {
-        for (let e = 0; e < 4; e++) this.meshList[e] && this.container.add(this.meshList[e])
+        for (let e = 0; e < 4; e++) this.container.add(this.meshList[e])
     }
     update(e) {
         if (properties.hasInitialized) {
@@ -27537,7 +27530,7 @@ class AboutHeroGround {
         properties.loader.add(settings.MODEL_PATH + "about/terrain.buf", {
             onLoad: e => {
                 this.geometry = e;
-                this.groundMesh && (this.groundMesh.geometry = e);
+                if (this.groundMesh) this.groundMesh.geometry = e;
             }
         }), this.texture = properties.loader.load(settings.TEXTURE_PATH + "about/terrain_shadow_light_height.webp", {
             type: "texture",
@@ -27594,10 +27587,7 @@ class AboutHeroGround {
         let r = properties.renderer,
             n = fboHelper.getColorState(),
             a = r.getRenderTarget();
-        r.setRenderTarget(this.currRenderTarget), r.setClearColor(16777215, 1), this.mesh.material.uniforms.u_blueNoiseOffset.value.set(~~(Math.random() * 128), ~~(Math.random() * 128)), this.mesh.material.uniforms.u_prevTexture.value = this.prevRenderTarget.texture, fboHelper.renderMesh(this.mesh, this.currRenderTarget), r.setRenderTarget(a), fboHelper.setColorState(n), sim.sharedUniforms.u_noiseStableFactor.value;
-        if (this.groundMesh && this.groundMesh.material && this.groundMesh.material.uniforms) {
-            this.groundMesh.material.uniforms.u_groundShadowTexture.value = this.currRenderTarget.texture, this.groundMesh.material.uniforms.u_bgColor.value.copy(properties.bgColor), this.groundMesh.material.uniforms.u_color.value.set("#fff");
-        }
+        r.setRenderTarget(this.currRenderTarget), r.setClearColor(16777215, 1), this.mesh.material.uniforms.u_blueNoiseOffset.value.set(~~(Math.random() * 128), ~~(Math.random() * 128)), this.mesh.material.uniforms.u_prevTexture.value = this.prevRenderTarget.texture, fboHelper.renderMesh(this.mesh, this.currRenderTarget), r.setRenderTarget(a), fboHelper.setColorState(n), sim.sharedUniforms.u_noiseStableFactor.value, this.groundMesh.material.uniforms.u_groundShadowTexture.value = this.currRenderTarget.texture, this.groundMesh.material.uniforms.u_bgColor.value.copy(properties.bgColor), this.groundMesh.material.uniforms.u_color.value.set("#fff")
     }
 }
 const aboutHeroGround = new AboutHeroGround,
@@ -28159,7 +28149,6 @@ class AboutHeroLetters {
     }
     init() {}
     _onBeforeRender() {
-        if (!this.meshList[0]) return;
         (properties.width != this.rt.width || properties.height != this.rt.height) && this.rt.setSize(properties.width, properties.height);
         let e = properties.renderer,
             t = e.getRenderTarget(),
@@ -28236,17 +28225,11 @@ class AboutHero extends Stage3D {
             minFilter: LinearFilter,
             type: "texture"
         }).content, shaderHelper.addChunk("aboutHeroVisualFinal_vert", aboutHeroVisualFinalVert), shaderHelper.addChunk("aboutHeroVisualFinal_frag", aboutHeroVisualFinalFrag), properties.loader.add(settings.MODEL_PATH + "about/camera_spline.buf", {
-            onLoad: e => {
-                this.cameraSplineGeo = e;
-                if (e && e.attributes) {
-                    this.cameraSplinePositions = e.attributes.position;
-                    this.cameraSplineOrientation = e.attributes.orient;
-                }
-            }
+            onLoad: e => this.cameraSplineGeo = e
         }), light.preInit(), sim.preInit(), lightField.preInit(), aboutHeroParticles.preInit(), aboutHeroRocks.preInit(), aboutHeroGround.preInit(), aboutHeroLines.preInit(), aboutHeroPerson$1.preInit(), aboutHeroFog.preInit(), aboutHeroHalo.preInit(), aboutHeroFaces.preInit(), aboutHeroLetters.preInit()
     }
     init() {
-        light.init(), sim.init(), lightField.init(), aboutHeroParticles.init(), aboutHeroRocks.init(), aboutHeroGround.init(), aboutHeroLines.init(), aboutHeroPerson$1.init(), aboutHeroFog.init(), aboutHeroScatter.init(), aboutHeroHalo.init(), aboutHeroFaces.init(), aboutHeroLetters.init(), this.add(aboutHeroParticles.container), this.sceneContainer.add(aboutHeroRocks.container), this.sceneContainer.add(aboutHeroPerson$1.container), this.sceneContainer.add(aboutHeroFog.container), this.add(this.sceneContainer), this.add(aboutHeroGround.container), this.add(aboutHeroHalo.container), this.hudContainer.add(aboutHeroLines.container), this.add(this.hudContainer), aboutPageHeroEfxPrepass.scene.add(aboutHeroFaces.container), aboutPageHeroEfxPrepass.scene.add(aboutHeroLetters.container), this.cameraSplinePositions = (this.cameraSplineGeo && this.cameraSplineGeo.attributes && this.cameraSplineGeo.attributes.position) ? this.cameraSplineGeo.attributes.position : { array: new Float32Array(600), count: 200 }, this.cameraSplineOrientation = (this.cameraSplineGeo && this.cameraSplineGeo.attributes && this.cameraSplineGeo.attributes.orient) ? this.cameraSplineGeo.attributes.orient : { array: new Float32Array(800) }, taskManager.add(this), taskManager.add(aboutPageHeroEfxPrepass.scene)
+        light.init(), sim.init(), lightField.init(), aboutHeroParticles.init(), aboutHeroRocks.init(), aboutHeroGround.init(), aboutHeroLines.init(), aboutHeroPerson$1.init(), aboutHeroFog.init(), aboutHeroScatter.init(), aboutHeroHalo.init(), aboutHeroFaces.init(), aboutHeroLetters.init(), this.add(aboutHeroParticles.container), this.sceneContainer.add(aboutHeroRocks.container), this.sceneContainer.add(aboutHeroPerson$1.container), this.sceneContainer.add(aboutHeroFog.container), this.add(this.sceneContainer), this.add(aboutHeroGround.container), this.add(aboutHeroHalo.container), this.hudContainer.add(aboutHeroLines.container), this.add(this.hudContainer), aboutPageHeroEfxPrepass.scene.add(aboutHeroFaces.container), aboutPageHeroEfxPrepass.scene.add(aboutHeroLetters.container), this.cameraSplinePositions = this.cameraSplineGeo.attributes.position, this.cameraSplineOrientation = this.cameraSplineGeo.attributes.orient, taskManager.add(this), taskManager.add(aboutPageHeroEfxPrepass.scene)
     }
     resize(e, t) {
         aboutHeroFog.resize(e, t), aboutHeroHalo.resize(e, t), aboutHeroFaces.resize(e, t)
@@ -34350,6 +34333,7 @@ class Preloader {
         this.percent = Math.min(this.percentTarget, this.percent + (settings.SKIP_ANIMATION ? 1 : this.percentTarget > this.percent ? e : 0) / this.MIN_PRELOAD_DURATION);
         if (this.percentTarget >= 0.95 || this.percent >= 0.68) {
             if (!properties.hasInitialized) {
+                properties.hasInitialized = !0;
                 try { this._initCallback(); } catch(err) { console.error(err); }
             }
             this.percentToStart = settings.SKIP_ANIMATION ? 1 : Math.min(1, this.percentToStart + e / this.MIN_DURATION_BETWEEN_INIT_AND_START);

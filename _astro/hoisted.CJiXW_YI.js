@@ -4064,7 +4064,7 @@ const _inverseMatrix$3 = new Matrix4,
     _intersectionPointWorld = new Vector3;
 class Mesh extends Object3D {
     constructor(e = new BufferGeometry, t = new MeshBasicMaterial) {
-        super(), this.isMesh = !0, this.type = "Mesh", this.geometry = e, this.material = t, this.updateMorphTargets()
+        super(), this.isMesh = !0, this.type = "Mesh", this.geometry = e || new BufferGeometry, this.material = t, this.updateMorphTargets()
     }
     copy(e, t) {
         return super.copy(e, t), e.morphTargetInfluences !== void 0 && (this.morphTargetInfluences = e.morphTargetInfluences.slice()), e.morphTargetDictionary !== void 0 && (this.morphTargetDictionary = Object.assign({}, e.morphTargetDictionary)), this.material = Array.isArray(e.material) ? e.material.slice() : e.material, this.geometry = e.geometry, this
@@ -20944,6 +20944,7 @@ class Line {
         })
     }
     init() {
+        if (this._hasInit) return; this._hasInit = !0;
         this.mesh = new Mesh(this.geometry, new ShaderMaterial({
             uniforms: {
                 u_showRatio: {
@@ -25625,11 +25626,12 @@ class GoalSection {
         }), this.frameBgMesh.renderOrder = -1, homePage.preUfxContainer.add(this.frameBgMesh), this.frameBgMesh.visible = !1, homeGoalSectionTunnelTitle.init(e), visuals.stage3DList.push(goalTunnels), goalTunnels.preInit(), this.lineVisual = new Line(1), this.lineVisual.preInit()
     }
     init() {
-        this._placeholderTexture1 = properties.loader.load(settings.TEXTURE_PATH + "/tunnels/tablet.png", {
+        if (this._hasInit) return; this._hasInit = !0;
+        this._placeholderTexture1 = properties.loader.load(settings.TEXTURE_PATH + "tunnels/tablet.png", {
             type: "texture",
             flipY: !1,
             minFilter: LinearFilter
-        }).content, this._placeholderTexture2 = properties.loader.load(settings.TEXTURE_PATH + "/tunnels/desktop.png", {
+        }).content, this._placeholderTexture2 = properties.loader.load(settings.TEXTURE_PATH + "tunnels/desktop.png", {
             type: "texture",
             flipY: !1,
             minFilter: LinearFilter
@@ -26774,20 +26776,23 @@ class HomePage extends Page {
         }
     }
     init() {
-        homeHeroSection.init(), homeReelSection.init(), homeFeaturedSection.init(), homeGoalSection.init();
+        try { homeHeroSection.init(); } catch(e) { console.error(e); }
+        try { homeReelSection.init(); } catch(e) { console.error(e); }
+        try { homeFeaturedSection.init(); } catch(e) { console.error(e); }
+        try { homeGoalSection.init(); } catch(e) { console.error(e); }
         if (this.domContainer.querySelector("#about-who")) {
-            aboutWhoSection.init();
+            try { aboutWhoSection.init(); } catch(e) { console.error(e); }
         }
         if (this.domContainer.querySelector("#about-clients")) {
-            aboutClientSection.init();
+            try { aboutClientSection.init(); } catch(e) { console.error(e); }
         }
         if (this.domContainer.querySelector("#about-award")) {
-            aboutAwardSection.init();
+            try { aboutAwardSection.init(); } catch(e) { console.error(e); }
         }
         if (this.domContainer.querySelector("#about-capability")) {
-            aboutCapabilitySection.init();
+            try { aboutCapabilitySection.init(); } catch(e) { console.error(e); }
         }
-        super.init()
+        super.init();
     }
     hasProject(e) {
         return homeFeaturedSection.projectItemList ? homeFeaturedSection.projectItemList.hasProject(e) : !1
@@ -27523,7 +27528,10 @@ class AboutHeroGround {
     blurCacheRenderTarget = null;
     preInit() {
         properties.loader.add(settings.MODEL_PATH + "about/terrain.buf", {
-            onLoad: e => this.geometry = e
+            onLoad: e => {
+                this.geometry = e;
+                if (this.groundMesh) this.groundMesh.geometry = e;
+            }
         }), this.texture = properties.loader.load(settings.TEXTURE_PATH + "about/terrain_shadow_light_height.webp", {
             type: "texture",
             flipY: !0,
@@ -27547,7 +27555,7 @@ class AboutHeroGround {
                 }
             }, light.sharedUniforms, blueNoise.sharedUniforms),
             fragmentShader: frag$b
-        })), this.mesh.material.defines.LIGHT_SHADOW_SAMPLE_COUNT = 8, this.groundMesh = new Mesh(this.geometry, new ShaderMaterial({
+        })), this.mesh.material.defines.LIGHT_SHADOW_SAMPLE_COUNT = 8, this.groundMesh = new Mesh(this.geometry || new BufferGeometry, new ShaderMaterial({
             uniforms: Object.assign({
                 u_texture: {
                     value: this.texture
@@ -34325,6 +34333,7 @@ class Preloader {
         this.percent = Math.min(this.percentTarget, this.percent + (settings.SKIP_ANIMATION ? 1 : this.percentTarget > this.percent ? e : 0) / this.MIN_PRELOAD_DURATION);
         if (this.percentTarget >= 0.95 || this.percent >= 0.68) {
             if (!properties.hasInitialized) {
+                properties.hasInitialized = !0;
                 try { this._initCallback(); } catch(err) { console.error(err); }
             }
             this.percentToStart = settings.SKIP_ANIMATION ? 1 : Math.min(1, this.percentToStart + e / this.MIN_DURATION_BETWEEN_INIT_AND_START);
