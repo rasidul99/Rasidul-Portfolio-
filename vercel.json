@@ -5,7 +5,11 @@
   "cleanUrls": true,
   "redirects": [
     { "source": "/about", "destination": "/", "permanent": true },
-    { "source": "/about.html", "destination": "/", "permanent": true }
+    { "source": "/about.html", "destination": "/", "permanent": true },
+    { "source": "/resume", "destination": "/assets/docs/Rasidul_Islam_Sajib_Product_Designer_CV.pdf", "permanent": false },
+    { "source": "/resume.html", "destination": "/assets/docs/Rasidul_Islam_Sajib_Product_Designer_CV.pdf", "permanent": false },
+    { "source": "/cv", "destination": "/assets/docs/Rasidul_Islam_Sajib_Product_Designer_CV.pdf", "permanent": false },
+    { "source": "/cv.pdf", "destination": "/assets/docs/Rasidul_Islam_Sajib_Product_Designer_CV.pdf", "permanent": false }
   ],
   "rewrites": [
     { "source": "/resume", "destination": "/assets/docs/Rasidul_Islam_Sajib_Product_Designer_CV.pdf" },
