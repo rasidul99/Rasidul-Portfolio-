@@ -18476,6 +18476,7 @@ class TaskManager {
         this._needsStart = !1, this._activeTaskList = this.taskList.splice(0, this.taskList.length), this._activeTaskIndex = 0
     }
     add(e) {
+        if (!e) return;
         settings.SKIP_ANIMATION || this.taskList.push(new Task(e))
     }
     update() {
@@ -21011,6 +21012,7 @@ class Line {
         for (let r = 0; r < t; r++) this.lineRatioArray[r] = e[r * 3 + 2]
     }
     resize(e, t) {
+        if (!this.mesh || !this.mesh.material) return;
         const r = t / Math.sqrt(e * e + t * t);
         this.mesh.material.uniforms.u_aspect.value.set(e / t * r, r)
     }
@@ -24443,7 +24445,7 @@ class GoalTunnelGlass {
             extensions: {
                 derivatives: !0
             }
-        })), this.mesh.visible = !1, this.mesh.frustumCulled = !1, this.mesh.renderOrder = 1e3, this.container.add(this.mesh), this.mesh.onBeforeRender = this._onBeforeRender.bind(this), this.mesh.onAfterRender = this._onAfterRender.bind(this)
+        })), this.mesh.visible = !1, this.mesh.frustumCulled = !1, this.mesh.renderOrder = 1e3, this.container.add(this.mesh), this.mesh.onBeforeRender = this._onBeforeRender.bind(this), this.mesh.onAfterRender = this._onAfterRender.bind(this), taskManager.add(this.mesh)
     }
     _onBeforeRender(e, t, r) {
         let n = cameraControls._camera;
@@ -24461,7 +24463,7 @@ class GoalTunnelGlass {
         this.sharedUniforms.u_positionTexture.value = fboHelper.createDataTexture(r, this.PIECE_COUNT, n, !0, !0), this.sharedUniforms.u_orientTexture.value = fboHelper.createDataTexture(e.attributes.orient.array, this.PIECE_COUNT, n, !0, !0)
     }
     init() {
-        taskManager.add(this.mesh)
+        if (this.mesh) taskManager.add(this.mesh);
     }
     resize(e, t) {}
     update(e) {
@@ -28226,16 +28228,17 @@ class AboutHero extends Stage3D {
             minFilter: LinearFilter,
             type: "texture"
         }).content, shaderHelper.addChunk("aboutHeroVisualFinal_vert", aboutHeroVisualFinalVert), shaderHelper.addChunk("aboutHeroVisualFinal_frag", aboutHeroVisualFinalFrag), properties.loader.add(settings.MODEL_PATH + "about/camera_spline.buf", {
-            onLoad: e => this.cameraSplineGeo = e
+            onLoad: e => { this.cameraSplineGeo = e; if (e && e.attributes) { this.cameraSplinePositions = e.attributes.position; this.cameraSplineOrientation = e.attributes.orient; } }
         }), light.preInit(), sim.preInit(), lightField.preInit(), aboutHeroParticles.preInit(), aboutHeroRocks.preInit(), aboutHeroGround.preInit(), aboutHeroLines.preInit(), aboutHeroPerson$1.preInit(), aboutHeroFog.preInit(), aboutHeroHalo.preInit(), aboutHeroFaces.preInit(), aboutHeroLetters.preInit()
     }
     init() {
-        light.init(), sim.init(), lightField.init(), aboutHeroParticles.init(), aboutHeroRocks.init(), aboutHeroGround.init(), aboutHeroLines.init(), aboutHeroPerson$1.init(), aboutHeroFog.init(), aboutHeroScatter.init(), aboutHeroHalo.init(), aboutHeroFaces.init(), aboutHeroLetters.init(), this.add(aboutHeroParticles.container), this.sceneContainer.add(aboutHeroRocks.container), this.sceneContainer.add(aboutHeroPerson$1.container), this.sceneContainer.add(aboutHeroFog.container), this.add(this.sceneContainer), this.add(aboutHeroGround.container), this.add(aboutHeroHalo.container), this.hudContainer.add(aboutHeroLines.container), this.add(this.hudContainer), aboutPageHeroEfxPrepass.scene.add(aboutHeroFaces.container), aboutPageHeroEfxPrepass.scene.add(aboutHeroLetters.container), this.cameraSplinePositions = this.cameraSplineGeo.attributes.position, this.cameraSplineOrientation = this.cameraSplineGeo.attributes.orient, taskManager.add(this), taskManager.add(aboutPageHeroEfxPrepass.scene)
+        light.init(), sim.init(), lightField.init(), aboutHeroParticles.init(), aboutHeroRocks.init(), aboutHeroGround.init(), aboutHeroLines.init(), aboutHeroPerson$1.init(), aboutHeroFog.init(), aboutHeroScatter.init(), aboutHeroHalo.init(), aboutHeroFaces.init(), aboutHeroLetters.init(), this.add(aboutHeroParticles.container), this.sceneContainer.add(aboutHeroRocks.container), this.sceneContainer.add(aboutHeroPerson$1.container), this.sceneContainer.add(aboutHeroFog.container), this.add(this.sceneContainer), this.add(aboutHeroGround.container), this.add(aboutHeroHalo.container), this.hudContainer.add(aboutHeroLines.container), this.add(this.hudContainer), aboutPageHeroEfxPrepass.scene.add(aboutHeroFaces.container), aboutPageHeroEfxPrepass.scene.add(aboutHeroLetters.container), this.cameraSplinePositions = this.cameraSplineGeo && this.cameraSplineGeo.attributes ? this.cameraSplineGeo.attributes.position : null, this.cameraSplineOrientation = this.cameraSplineGeo && this.cameraSplineGeo.attributes ? this.cameraSplineGeo.attributes.orient : null, this.cameraSplinePositions && taskManager.add(this), taskManager.add(aboutPageHeroEfxPrepass.scene)
     }
     resize(e, t) {
         aboutHeroFog.resize(e, t), aboutHeroHalo.resize(e, t), aboutHeroFaces.resize(e, t)
     }
     syncProperties(e) {
+        if (!this.cameraSplinePositions || !this.cameraSplineOrientation) return;
         this.sharedUniforms.u_introRatio.value = this.introRatio;
         const t = math.saturate(this.initialSplineRatio) * 149 + math.saturate(this.panningSplineRaito) * 50,
             r = Math.floor(t),
@@ -34343,6 +34346,7 @@ class Preloader {
             r = 0;
         t >= 0.999 && (this.lineTransformTime += settings.SKIP_ANIMATION ? 1 : e, r = ease.expoInOut(math.saturate(this.lineTransformTime)));
         if (r >= 0.999 && !properties.hasStarted) {
+            properties.hasStarted = !0;
             try { this._startCallback(); } catch(err) { console.error(err); }
         }
         let n = settings.SKIP_ANIMATION ? +properties.hasStarted : math.saturate(properties.startTime);
