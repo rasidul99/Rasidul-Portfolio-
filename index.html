@@ -305,6 +305,99 @@
             min-height: 100vh;
         }
 
+        /* Hero Reel Video Styling */
+        .hero-reel video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            border-radius: inherit;
+        }
+        .reel-full__card {
+            position: relative;
+        }
+        .reel-full__card .reel-video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            border-radius: inherit;
+        }
+        .reel-sound-btn {
+            position: absolute;
+            bottom: 12px;
+            right: 12px;
+            z-index: 10;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            color: #fff;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: transform 0.2s, background 0.2s;
+            padding: 0;
+        }
+        .reel-sound-btn:hover {
+            background: rgba(0, 0, 0, 0.85);
+            transform: scale(1.08);
+        }
+
+        @media (min-width: 769px) {
+            .reel-full__card .reel-video {
+                opacity: 0;
+                pointer-events: none;
+            }
+            .reel-sound-btn {
+                display: none !important;
+            }
+        }
+
+        /* Mobile Responsive Spacing & Layout */
+        @media (max-width: 768px) {
+            .hero-stack {
+                min-height: auto !important;
+            }
+            .intro {
+                padding-top: max(96px, calc(70px + 6vw)) !important;
+                padding-bottom: 14px !important;
+                min-height: auto !important;
+            }
+            .reel-full {
+                min-height: auto !important;
+                padding-top: 10px !important;
+                padding-bottom: 20px !important;
+                display: block !important;
+            }
+            .reel-full__card {
+                position: relative !important;
+                width: 100% !important;
+                max-width: none !important;
+                aspect-ratio: 16 / 9 !important;
+                border-radius: 16px !important;
+                overflow: hidden !important;
+                box-shadow: 0 12px 36px rgba(0, 0, 0, 0.1) !important;
+            }
+            .reel-full__card .reel-video {
+                opacity: 1 !important;
+                position: absolute !important;
+                inset: 0 !important;
+            }
+            .reel-sound-btn {
+                display: flex !important;
+            }
+            .reel-morph {
+                display: none !important;
+            }
+            #home-featured {
+                padding-top: 24px !important;
+            }
+        }
+
         /* Project Showcase Thumbnails handled by WebGL UfxMesh */
         .project-item-image {
             background-color: transparent !important;
@@ -1062,7 +1155,7 @@
                                       - WebGL Morph: This element's bounding rect is measured by the JS shader (index.html line ~570)
                                         to anchor the initial state of the morphing WebGL 3D video.
                                     -->
-                                    <span class="hero-reel" data-node-id="12:13018" aria-hidden="true"></span>
+                                    <span class="hero-reel" data-node-id="12:13018" aria-hidden="true"><video src="/assets/hero/reel-teaser-sm.mp4" poster="/assets/hero/reel-teaser-poster.webp" autoplay loop muted playsinline webkit-playsinline></video></span>
 
                                     <!-- 
                                       [WORD: "remember"]
@@ -1083,7 +1176,20 @@
                           - Local Asset Teaser Image: /assets/hero/reel-teaser-poster.webp (fallback background image)
                         -->
                         <section class="reel-full" data-node-id="11:11958">
-                            <div class="reel-full__card" data-node-id="11:11959"></div>
+                            <div class="reel-full__card" data-node-id="11:11959">
+                                <video class="reel-video" src="/assets/hero/reel-teaser-sm.mp4" poster="/assets/hero/reel-teaser-poster.webp" autoplay loop muted playsinline webkit-playsinline></video>
+                                <button class="reel-sound-btn" aria-label="Toggle sound" title="Toggle audio" type="button">
+                                    <svg class="sound-icon-muted" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+                                        <line x1="23" y1="9" x2="17" y2="15"></line>
+                                        <line x1="17" y1="9" x2="23" y2="15"></line>
+                                    </svg>
+                                    <svg class="sound-icon-unmuted" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none;">
+                                        <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+                                        <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+                                    </svg>
+                                </button>
+                            </div>
                         </section>
                     </div>
 
@@ -2159,6 +2265,36 @@
     <div class="reel-morph" aria-hidden="true">
         <canvas class="reel-morph__canvas"></canvas>
     </div>
+
+    <script>
+        (function() {
+            function initReelControls() {
+                document.querySelectorAll('.reel-sound-btn').forEach(btn => {
+                    if (btn.__hasInitSound) return;
+                    btn.__hasInitSound = true;
+                    btn.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        const card = this.closest('.reel-full__card');
+                        const video = card ? card.querySelector('video') : null;
+                        if (!video) return;
+                        video.muted = !video.muted;
+                        const iconMuted = this.querySelector('.sound-icon-muted');
+                        const iconUnmuted = this.querySelector('.sound-icon-unmuted');
+                        if (iconMuted && iconUnmuted) {
+                            iconMuted.style.display = video.muted ? 'block' : 'none';
+                            iconUnmuted.style.display = video.muted ? 'none' : 'block';
+                        }
+                    });
+                });
+            }
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', initReelControls);
+            } else {
+                initReelControls();
+            }
+        })();
+    </script>
 
     <!-- WebGL Morph Script -->
     <script type="module">
