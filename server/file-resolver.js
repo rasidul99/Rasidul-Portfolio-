@@ -36,6 +36,13 @@ function findFile(reqPath) {
     reqPath = path.normalize(reqPath).replace(/^(\.\.[\/\\])+/, '');
 
     // Path Overrides
+    if (reqPath === '/resume' || reqPath === '\\resume' || 
+        reqPath === '/resume.pdf' || reqPath === '\\resume.pdf' ||
+        reqPath === '/cv' || reqPath === '\\cv' ||
+        reqPath === '/cv.pdf' || reqPath === '\\cv.pdf') {
+        reqPath = '/assets/docs/Rasidul_Islam_Sajib_Product_Designer_CV.pdf';
+    }
+
     if (reqPath.startsWith('/assets/projects/oryzo_ai') || reqPath.startsWith('\\assets\\projects\\oryzo_ai')) {
         reqPath = reqPath.replace('/assets/projects/oryzo_ai', '/assets/projects/CodeMoly')
                          .replace('\\assets\\projects\\oryzo_ai', '\\assets\\projects\\CodeMoly');
@@ -45,6 +52,7 @@ function findFile(reqPath) {
         reqPath = reqPath.replace(/\/assets\/projects\/moly(ecom)?/i, '/assets/projects/of_the_oak')
                          .replace(/\\assets\\projects\\moly(ecom)?/i, '\\assets\\projects\\of_the_oak');
     }
+
 
     if (reqPath === '/assets/models/home/cross.buf' || reqPath === '\\assets\\models\\home\\cross.buf') {
         reqPath = '/assets/models/home/cross_ld.buf';

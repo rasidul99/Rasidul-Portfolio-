@@ -31702,7 +31702,7 @@ class ScrollNavSection {
             this.domContainer.__hasClick = !0;
             this.domContainer.style.cursor = "pointer";
             this.domContainer.addEventListener("click", () => {
-                let p = this.path || (pagesManager.currRoute && pagesManager.currRoute.scrollNavPath) || "https://drive.google.com/file/d/18IKQlOMopqBa-Vndg8mJWGZaUWQhY7n0/view";
+                let p = this.path || (pagesManager.currRoute && pagesManager.currRoute.scrollNavPath) || "/resume";
                 if (p.startsWith("http")) {
                     let opened = false;
                     try {
@@ -31722,7 +31722,7 @@ class ScrollNavSection {
             a = (input.deltaDragScrollY + input.deltaWheel) * (scrollManager.isActive && pagesManager.isIdle ? 1 : 0);
         if (this.downWaitTime = a > 0 ? .3 : Math.max(0, this.downWaitTime - e), this.overScrollRatio = r ? math.saturate(this.overScrollRatio + e * (n && a > 0 ? 2 : this.downWaitTime > 0 ? 0 : a < 0 ? -5 : -.2) * (pagesManager.isIdle ? 1 : 0)) : 0, r) {
             let l = pagesManager.currRoute;
-            this.barInner.style.transform = `scaleX(${this.overScrollRatio})`, scrollManager.isActive && pagesManager.isIdle && (this.path !== l.scrollNavPath && (this.path = l.scrollNavPath, this.domText.innerHTML = l.scrollNavText), this.overScrollRatio >= .98 && (this.path && this.path.startsWith("http") ? ((() => { let targetUrl = this.path || "https://drive.google.com/file/d/18IKQlOMopqBa-Vndg8mJWGZaUWQhY7n0/view"; let opened = false; try { let w = window.open(targetUrl, "_blank"); if (w && !w.closed && typeof w.closed !== "undefined") opened = true; } catch(err) {} if (!opened) window.location.href = targetUrl; })(), this.overScrollRatio = 0, this.downWaitTime = 2) : routeManager.setPath(this.path)))
+            this.barInner.style.transform = `scaleX(${this.overScrollRatio})`, scrollManager.isActive && pagesManager.isIdle && (this.path !== l.scrollNavPath && (this.path = l.scrollNavPath, this.domText.innerHTML = l.scrollNavText), this.overScrollRatio >= .98 && (this.path && this.path.startsWith("http") ? ((() => { let targetUrl = this.path || "/resume"; let opened = false; try { let w = window.open(targetUrl, "_blank"); if (w && !w.closed && typeof w.closed !== "undefined") opened = true; } catch(err) {} if (!opened) window.location.href = targetUrl; })(), this.overScrollRatio = 0, this.downWaitTime = 2) : routeManager.setPath(this.path)))
         }
     }
 }

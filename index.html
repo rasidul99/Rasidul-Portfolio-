@@ -1982,12 +1982,12 @@
                         </div>
                     </div>
                 </div>
-                <div id="scroll-nav-section" class="section" data-path="https://drive.google.com/file/d/18IKQlOMopqBa-Vndg8mJWGZaUWQhY7n0/view">
+                <div id="scroll-nav-section" class="section" data-path="/resume">
                     <div id="scroll-nav-content">
                         <div id="scroll-nav-subtitle">Keep Scrolling<br>to View Resume</div>
                         <div id="scroll-nav-main">
                             <div id="scroll-nav-text">My Resume</div>
-                            <a id="scroll-nav-next" href="https://drive.google.com/file/d/18IKQlOMopqBa-Vndg8mJWGZaUWQhY7n0/view" target="_blank" rel="noopener noreferrer" style="text-decoration:none;color:inherit;cursor:pointer;">
+                            <a id="scroll-nav-next" href="/resume" target="_blank" rel="noopener noreferrer" style="text-decoration:none;color:inherit;cursor:pointer;">
                                 <div id="scroll-nav-next-text">Resume</div>
                                 <div id="scroll-nav-next-bar">
                                     <div id="scroll-nav-next-bar-inner"></div>
@@ -2028,7 +2028,7 @@
                                 scrollNav.style.cursor = 'pointer';
                                 scrollNav.addEventListener('click', function(e) {
                                     if (e.target.closest('#scroll-nav-next')) return;
-                                    const p = 'https://drive.google.com/file/d/18IKQlOMopqBa-Vndg8mJWGZaUWQhY7n0/view';
+                                    const p = '/resume';
                                     let opened = false;
                                     try {
                                         const w = window.open(p, '_blank');

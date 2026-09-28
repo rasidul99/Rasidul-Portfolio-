@@ -50,6 +50,7 @@ const MIME_TYPES = {
     '.ogg': 'audio/ogg',
     '.mp4': 'video/mp4',
     '.webm': 'video/webm',
+    '.pdf': 'application/pdf',
     '.txt': 'text/plain; charset=utf-8'
 };
 

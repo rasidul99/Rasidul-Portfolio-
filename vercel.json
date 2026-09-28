@@ -8,6 +8,9 @@
     { "source": "/about.html", "destination": "/", "permanent": true }
   ],
   "rewrites": [
-    { "source": "/resume", "destination": "/resume.html" }
+    { "source": "/resume", "destination": "/assets/docs/Rasidul_Islam_Sajib_Product_Designer_CV.pdf" },
+    { "source": "/resume.pdf", "destination": "/assets/docs/Rasidul_Islam_Sajib_Product_Designer_CV.pdf" },
+    { "source": "/cv", "destination": "/assets/docs/Rasidul_Islam_Sajib_Product_Designer_CV.pdf" },
+    { "source": "/cv.pdf", "destination": "/assets/docs/Rasidul_Islam_Sajib_Product_Designer_CV.pdf" }
   ]
 }
