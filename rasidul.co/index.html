@@ -564,7 +564,61 @@
         }
         @media (max-width: 812px) {
             #home #about-who {
-                padding-bottom: calc(var(--vh, 1vh) * 450) !important;
+                padding-bottom: calc(var(--vh, 1vh) * 370) !important;
+            }
+            #about-who-team-left-mobile-tips {
+                display: none !important;
+            }
+            #about-who-team-faces {
+                margin-left: 0 !important;
+                margin-top: 0 !important;
+                left: 50% !important;
+                transform: translateX(-50%) !important;
+                bottom: 22% !important;
+                height: 58% !important;
+                width: 90% !important;
+                max-width: 330px !important;
+                display: flex !important;
+                align-items: center !important;
+                justify-content: center !important;
+                z-index: 2 !important;
+            }
+            #about-who-team-face-img {
+                opacity: 0.95 !important;
+                margin: 0 auto !important;
+                width: 100% !important;
+                height: 100% !important;
+                object-fit: contain !important;
+            }
+            #about-who-team-desc {
+                position: absolute !important;
+                bottom: 24px !important;
+                left: 18px !important;
+                right: 18px !important;
+                width: auto !important;
+                background: linear-gradient(180deg, rgba(8, 10, 15, 0.72) 0%, rgba(8, 10, 15, 0.94) 100%) !important;
+                backdrop-filter: blur(16px) !important;
+                -webkit-backdrop-filter: blur(16px) !important;
+                border: 1px solid rgba(255, 255, 255, 0.12) !important;
+                border-radius: 16px !important;
+                padding: 14px 16px !important;
+                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.75) !important;
+                z-index: 10 !important;
+            }
+            #about-who-team-desc-text {
+                color: #f1f3f7 !important;
+                font-size: 13px !important;
+                line-height: 1.55 !important;
+                letter-spacing: 0.01em !important;
+                margin: 0 !important;
+                text-shadow: 0 1px 3px rgba(0, 0, 0, 0.9) !important;
+            }
+            #about-who-team-left {
+                display: none !important;
+            }
+            #about-clients {
+                position: relative !important;
+                z-index: 20 !important;
             }
         }
     </style>

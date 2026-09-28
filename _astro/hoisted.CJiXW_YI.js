@@ -28847,7 +28847,7 @@ class WhoSubsectionTeam {
         let b = 0,
             C = 0,
             w = 0;
-        if (t ? (properties.useMobileLayout ? (b = math.fit(r, -.5, 0, 0, 1), C = math.fit(r, -.5, 0, 0, 1) * math.fit(r, .5, 1, 1, 0), w = l) : (b = math.fit(r, -.5, -.2, 0, 1), C = math.fit(r, -.4, -.1, 0, 1), w = math.fit(r, -.3, 0, 0, 1)), this.domTitle.style.opacity = b, this.domDesc.style.opacity = C, this.domLeft.style.opacity = w, this.domFaces.style.opacity = w, this.domLeft.style.visibility = "visible", this.domFaces.style.visibility = "visible", this.domTitle.style.visibility = "visible", this.domDesc.style.visibility = "visible", this.letterMesh.syncRect(this.letterRect.x + aboutWhoSection.subsectionContainerOffsetX + this.containerOffsetX, this.letterRect.y + aboutWhoSection.subsectionContainerOffsetY - scrollManager.scrollPixel, this.letterRect.width, this.letterRect.height), this.letterMesh.update(), this.letterMesh.visible = !0) : (this.domLeft.style.visibility = "hidden", this.domFaces.style.visibility = "hidden", this.domTitle.style.visibility = "hidden", this.domDesc.style.visibility = "hidden"), this.teamDataList.length)
+        if (t ? (properties.useMobileLayout ? (b = math.fit(r, -.5, 0, 0, 1) * math.fit(r, .8, 1.4, 1, 0), C = math.fit(r, -.5, 0, 0, 1) * math.fit(r, .8, 1.4, 1, 0), w = math.fit(r, -.4, 0, 0, 1) * math.fit(r, .8, 1.4, 1, 0)) : (b = math.fit(r, -.5, -.2, 0, 1), C = math.fit(r, -.4, -.1, 0, 1), w = math.fit(r, -.3, 0, 0, 1)), this.domTitle.style.opacity = b, this.domDesc.style.opacity = C, this.domLeft.style.opacity = w, this.domFaces.style.opacity = w, this.domLeft.style.visibility = w > .01 ? "visible" : "hidden", this.domFaces.style.visibility = w > .01 ? "visible" : "hidden", this.domTitle.style.visibility = b > .01 ? "visible" : "hidden", this.domDesc.style.visibility = C > .01 ? "visible" : "hidden", this.letterMesh.syncRect(this.letterRect.x + aboutWhoSection.subsectionContainerOffsetX + this.containerOffsetX, this.letterRect.y + aboutWhoSection.subsectionContainerOffsetY - scrollManager.scrollPixel, this.letterRect.width, this.letterRect.height), this.letterMesh.update(), this.letterMesh.visible = !0) : (this.domLeft.style.visibility = "hidden", this.domFaces.style.visibility = "hidden", this.domTitle.style.visibility = "hidden", this.domDesc.style.visibility = "hidden"), this.teamDataList.length)
             if (t) {
                 this.wasActive || this.reset(), properties.useMobileLayout || (aboutHero.properties.cameraViewportOffsetX = (properties.viewportWidth / 2 - (properties.viewportWidth - this.domRightWidth) / 2) * math.fit(r, -aboutWhoSection.PAGE_DISTANCE, 0, 0, 1, ease.cubicInOut));
                 let R = this.hasSwiped && c;
@@ -28893,7 +28893,7 @@ class AboutWhoSection {
                 this.RANGE_PAGE_23 = 0.6;
                 this.RANGE_END_WAIT = 2.0;
             }
-            this.THRESHOLDS.push(t += this.RANGE_START_WAIT), this.THRESHOLDS.push(t += this.RANGE_PAGE_12), this.THRESHOLDS.push(t += this.RANGE_PAGE_23), r = t, this.MOBILE_THRESHOLDS.push.apply(this.MOBILE_THRESHOLDS, this.THRESHOLDS), this.THRESHOLDS.push(t += this.RANGE_END_WAIT), this.MOBILE_THRESHOLDS.push(r += this.RANGE_PAGE_34), this.MOBILE_THRESHOLDS.push(r += this.RANGE_END_WAIT);
+            this.THRESHOLDS.push(t += this.RANGE_START_WAIT), this.THRESHOLDS.push(t += this.RANGE_PAGE_12), this.THRESHOLDS.push(t += this.RANGE_PAGE_23), this.THRESHOLDS.push(t += this.RANGE_END_WAIT), this.MOBILE_THRESHOLDS = this.THRESHOLDS.slice();
         }
         whoSubsectionWeAre.preInit(e), whoSubsectionDetails.preInit(e), whoSubsectionTeam.preInit(e), aboutHero.preInit();
         if (!visuals.stage3DList.includes(aboutHero)) {
@@ -28916,7 +28916,7 @@ class AboutWhoSection {
         let e = properties.useMobileLayout ? this.MOBILE_THRESHOLDS : this.THRESHOLDS,
             t = this.getMoveRatio(),
             r = 0;
-        return t < e[0] ? r = 0 : t < e[1] ? r = math.fit(t, e[0], e[1], 0, 1, ease.cubicInOut) : properties.useMobileLayout ? t < e[2] ? r = math.fit(t, e[1], e[2], 1, 2, ease.cubicInOut) : r = math.fit(t, e[2], e[3], 2, 3, ease.cubicInOut) : r = math.fit(t, e[1], e[2], 1, 2, ease.cubicInOut), this.scrollRatio = r
+        return t < e[0] ? r = 0 : t < e[1] ? r = math.fit(t, e[0], e[1], 0, 1, ease.cubicInOut) : r = math.fit(t, e[1], e[2], 1, 2, ease.cubicInOut), this.scrollRatio = r
     }
     syncSubsectionContainerTransform() {
         let e = properties.useMobileLayout ? this.MOBILE_THRESHOLDS : this.THRESHOLDS,
@@ -28938,8 +28938,8 @@ class AboutWhoSection {
                 u = -l.screenY / (properties.useMobileLayout ? properties.viewportHeight : properties.viewportWidth);
             aboutHero.initialSplineRatio = math.fit(u, 0, t[1], 0, 1), aboutHero.hudRatio = math.fit(u, t[1], t[1] + this.RANGE_PAGE_23 * .5, 0, 1), aboutHero.outSectionRatio = math.fit(u / t[3], .9, 1, 0, 1), aboutHero.properties.cameraViewportOffsetX = 0, aboutHero.properties.cameraViewportOffsetY = 0, aboutHero.scrollYRatio = 0, aboutHero.faceShowRatio = 0, c < this.PAGE_DISTANCE ? (aboutHero.introRatio = u / (this.RANGE_START_WAIT + this.RANGE_PAGE_12), whoSubsectionWeAre.update(e, !0, c, u, this.subsectionContainerOffsetY)) : (aboutHero.introRatio = 1, whoSubsectionWeAre.update(e, !1, c, u, this.subsectionContainerOffsetY)), c > 0 && c < this.PAGE_DISTANCE * 2 ? whoSubsectionDetails.update(e, !0, c - this.PAGE_DISTANCE, this.subsectionContainerOffsetY) : whoSubsectionDetails.update(e, !1, c - this.PAGE_DISTANCE, this.subsectionContainerOffsetY);
             let f = this.getMoveRatio();
-            properties.useMobileLayout ? aboutHero.panningSplineRaito = math.fit(f, t[2], t[4], 0, 1) : aboutHero.panningSplineRaito = math.fit(f, t[1], t[3], 0, 1);
-            let p = math.fit(c - this.PAGE_DISTANCE * 2 - (properties.useMobileLayout ? this.PAGE_DISTANCE : 0), -1, 0, 0, 1),
+            aboutHero.panningSplineRaito = math.fit(f, t[1], t[3], 0, 1);
+            let p = math.fit(c - this.PAGE_DISTANCE * 2, -1, 0, 0, 1),
                 g = Math.max(0, scrollManager.scrollPixel - l.top - t[t.length - 1] * r);
             c >= this.PAGE_DISTANCE ? (aboutHero.properties.cameraViewportOffsetY = g, aboutHero.scrollYRatio = g / r, whoSubsectionTeam.update(e, !0, c - this.PAGE_DISTANCE * 2, g, this.subsectionContainerOffsetY, p)) : whoSubsectionTeam.update(e, !1, c - this.PAGE_DISTANCE * 2, g, this.subsectionContainerOffsetY, p), aboutHero.isActive = !0
         } else aboutHero.isActive = !1, whoSubsectionTeam.wasActive = !1, whoSubsectionWeAre.domContainer && (whoSubsectionWeAre.domContainer.style.visibility = "hidden"), aboutWhoLogo.container.visible = !1
