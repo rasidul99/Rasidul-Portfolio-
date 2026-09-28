@@ -20944,7 +20944,7 @@ class Line {
         })
     }
     init() {
-        if (this._hasInit) return; this._hasInit = !0;
+        if (this.mesh) return;
         this.mesh = new Mesh(this.geometry, new ShaderMaterial({
             uniforms: {
                 u_showRatio: {
@@ -21015,6 +21015,7 @@ class Line {
         this.mesh.material.uniforms.u_aspect.value.set(e / t * r, r)
     }
     update(e, t, r = 0) {
+        if (!this.mesh || !this.mesh.material) return;
         if (!this.geometry || !this.geometry.attributes || !this.geometry.attributes.CP || !this.geometry.attributes.Cd || !this.geometry.attributes.position) return;
         if (!this.lineRatioArray && this.geometry.attributes.position) {
             const { array: posE, count: posT } = this.geometry.attributes.position;
@@ -25626,7 +25627,7 @@ class GoalSection {
         }), this.frameBgMesh.renderOrder = -1, homePage.preUfxContainer.add(this.frameBgMesh), this.frameBgMesh.visible = !1, homeGoalSectionTunnelTitle.init(e), visuals.stage3DList.push(goalTunnels), goalTunnels.preInit(), this.lineVisual = new Line(1), this.lineVisual.preInit()
     }
     init() {
-        if (this._hasInit) return; this._hasInit = !0;
+        if (this._hasInit && this.lineVisual && this.lineVisual.mesh) return; this._hasInit = !0;
         this._placeholderTexture1 = properties.loader.load(settings.TEXTURE_PATH + "tunnels/tablet.png", {
             type: "texture",
             flipY: !1,
