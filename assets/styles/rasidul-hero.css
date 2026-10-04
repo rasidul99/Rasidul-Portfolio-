@@ -603,7 +603,7 @@ body.nav-open .nav__toggle-icon-curl {
     align-items: center;
     justify-content: center;
     width: 100%;
-    column-gap: 3.5cqw;
+    column-gap: 2.6cqw;
 }
 
 .hero-row > span,
@@ -622,22 +622,22 @@ body.nav-open .nav__toggle-icon-curl {
 .hero-row .w-people,
 .hero-row .w-remember {
     width: auto !important;
-    height: 8.5cqw !important;
+    height: 7.2cqw !important;
 }
 
 .hero-row .hero-avatars {
     width: auto !important;
-    height: 8.5cqw !important;
+    height: 7.2cqw !important;
 }
 
 .hero-row .hero-arrow {
-    width: 17.51cqw !important;
-    height: 6.251cqw !important;
+    width: 14.5cqw !important;
+    height: 5.2cqw !important;
 }
 
 .hero-row .hero-reel {
-    width: 17.137cqw !important;
-    height: 9.639cqw !important;
+    width: 15.5cqw !important;
+    height: 8.7cqw !important;
 }
 
 .w-we {
@@ -712,7 +712,7 @@ body.nav-open .nav__toggle-icon-curl {
     color: var(--fill-0, #1A1A1A);
     white-space: nowrap;
     text-transform: uppercase;
-    font-size: 8cqw;
+    font-size: 6.8cqw;
     line-height: 1;
     display: flex;
     align-items: center;
@@ -720,7 +720,7 @@ body.nav-open .nav__toggle-icon-curl {
 }
 
 .w-we {
-    font-size: 9.5cqw;
+    font-size: 8.2cqw;
     justify-content: center;
 }
 
