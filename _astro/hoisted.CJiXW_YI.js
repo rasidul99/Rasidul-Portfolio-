@@ -25142,14 +25142,23 @@ class GoalWhiteTunnelParticles {
     constructor() {}
     preInit() {
         properties.loader.add(settings.MODEL_PATH + "tunnels/diamond.buf", {
-            onLoad: e => this.geo = e
+            onLoad: e => {
+                this.geo = e;
+                if (this.geometry && e && e.attributes) {
+                    for (let u in e.attributes) this.geometry.attributes[u] = e.attributes[u];
+                    if (e.index) this.geometry.index = e.index;
+                }
+            }
         })
     }
     init() {
-        let e = this.geo,
+        let e = this.geo || new BufferGeometry,
             t = new InstancedBufferGeometry;
-        for (let u in e.attributes) t.attributes[u] = e.attributes[u];
-        t.index = e.index;
+        this.geometry = t;
+        if (e && e.attributes) {
+            for (let u in e.attributes) t.attributes[u] = e.attributes[u];
+            if (e.index) t.index = e.index;
+        }
         let r = math.getSeedRandomFn("diamonds-3");
         const n = new Float32Array(this.PARTICLE_COUNT * 3),
             a = new Float32Array(this.PARTICLE_COUNT * 3),
@@ -25439,7 +25448,15 @@ class GoalTunnels extends Stage3D {
         goalTunnelEfx.init(), properties.postprocessing.queue.push(goalTunnelEfx), goalTunnelAstronauts.preInit(), goalBlackTunnel.preInit(), goalWhiteTunnel.preInit(), goalTunnelsBackground.preInit(), goalWhiteTunnelParticles.preInit(), goalWhiteTunnelStickers.preInit(), this.add(goalTunnelsBackground.container), this.add(goalBlackTunnel.container), this.add(goalWhiteTunnel.container), this.add(goalWhiteTunnelParticles.container), this.add(goalWhiteTunnelStickers.container), goalTunnelGlass.preInit(), homePage.preUfxContainer.add(goalTunnelGlass.container)
     }
     init() {
-        goalTunnelAstronauts.init(), goalBlackTunnel.init(), goalWhiteTunnel.init(), goalTunnelGlass.init(), goalTunnelsBackground.init(), goalWhiteTunnelParticles.init(), goalWhiteTunnelStickers.init(), this.resetAstronautLayer(), taskManager.add(this)
+        try { goalTunnelAstronauts.init(); } catch(e) {}
+        try { goalBlackTunnel.init(); } catch(e) {}
+        try { goalWhiteTunnel.init(); } catch(e) {}
+        try { goalTunnelGlass.init(); } catch(e) {}
+        try { goalTunnelsBackground.init(); } catch(e) {}
+        try { goalWhiteTunnelParticles.init(); } catch(e) {}
+        try { goalWhiteTunnelStickers.init(); } catch(e) {}
+        try { this.resetAstronautLayer(); } catch(e) {}
+        try { taskManager.add(this); } catch(e) {}
     }
     resize(e, t) {
         goalTunnelAstronauts.resize(e, t), goalBlackTunnel.resize(e, t), goalWhiteTunnel.resize(e, t), goalTunnelsBackground.resize(e, t), goalWhiteTunnelParticles.resize(e, t), goalWhiteTunnelStickers.resize(e, t)
@@ -25630,19 +25647,35 @@ class GoalSection {
     }
     init() {
         if (this._hasInit && this.lineVisual && this.lineVisual.mesh) return; this._hasInit = !0;
-        this._placeholderTexture1 = properties.loader.load(settings.TEXTURE_PATH + "tunnels/tablet.png", {
-            type: "texture",
-            flipY: !1,
-            minFilter: LinearFilter
-        }).content, this._placeholderTexture2 = properties.loader.load(settings.TEXTURE_PATH + "tunnels/desktop.png", {
-            type: "texture",
-            flipY: !1,
-            minFilter: LinearFilter
-        }).content, this._photoTexture = properties.loader.load(settings.TEXTURE_PATH + "tunnels/user-photo-screen.jpeg", {
-            type: "texture",
-            flipY: !1,
-            minFilter: LinearFilter
-        }).content, goalTunnels.init(), this.lineVisual.init(), homePage.postUfxContainer.add(this.lineVisual.container), window.__goalSection = this;
+        try {
+            this._placeholderTexture1 = properties.loader.load(settings.TEXTURE_PATH + "tunnels/tablet.png", {
+                type: "texture",
+                flipY: !1,
+                minFilter: LinearFilter
+            }).content;
+        } catch(e) {}
+        try {
+            this._placeholderTexture2 = properties.loader.load(settings.TEXTURE_PATH + "tunnels/desktop.png", {
+                type: "texture",
+                flipY: !1,
+                minFilter: LinearFilter
+            }).content;
+        } catch(e) {}
+        try {
+            this._photoTexture = properties.loader.load(settings.TEXTURE_PATH + "tunnels/user-photo-screen.jpeg", {
+                type: "texture",
+                flipY: !1,
+                minFilter: LinearFilter
+            }).content;
+        } catch(e) {}
+        try { goalTunnels.init(); } catch(err) { console.warn("goalTunnels.init warning:", err); }
+        try {
+            this.lineVisual.init();
+            homePage.postUfxContainer.add(this.lineVisual.container);
+        } catch(err) {
+            console.warn("lineVisual.init warning:", err);
+        }
+        window.__goalSection = this;
     }
     show() {}
     hide() {}
