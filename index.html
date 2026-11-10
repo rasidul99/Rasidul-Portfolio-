@@ -158,6 +158,21 @@
                 margin-top: 2.5rem !important;
             }
         }
+                #footer-bottom-tagline {
+            display: block !important;
+            grid-column: 7 / span 6 !important;
+            max-width: 480px !important;
+            margin-left: auto !important;
+            width: 100% !important;
+            text-align: left !important;
+        }
+        @media (max-width: 1000px) {
+            #footer-bottom-tagline {
+                grid-column: 1 / span 6 !important;
+                margin-left: 0 !important;
+                max-width: 100% !important;
+            }
+        }
         #footer-newsletter-header {
             font-size: clamp(1.4rem, 1.8vw, 2.2rem) !important;
             font-weight: 500 !important;

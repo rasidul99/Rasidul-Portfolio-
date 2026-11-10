@@ -5837,7 +5837,10 @@ html.is-white-bg #end-section-title-bottom-right-decoration {
 #footer-bottom-tagline {
     position: relative;
     overflow: hidden;
-    grid-column: 10 / span 2;
+    grid-column: 7 / span 6;
+    max-width: 480px;
+    margin-left: auto;
+    width: 100%;
     will-change: transform
 }
 
